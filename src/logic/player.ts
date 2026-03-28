@@ -1,9 +1,9 @@
 import { Character } from "./character";
 
-const Player = new Character("???", {
-  he: "they",
-  him: "them",
-  his: "their",
-  himself: "themself",
+export const Player = new Character("???", {
+  e: "they",
+  ir: "them",
+  is: "their",
+  irself: "themself",
   plural: true,
 });

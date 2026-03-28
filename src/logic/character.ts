@@ -1,14 +1,8 @@
-import type { Pronoun } from "./types-and-templates/pronouns";
-
-enum ScoreOperation {
-  plus = "PLUS",
-  minus = "MINUS",
-}
-
-enum WalletPockets {
-  MONEY = "money",
-  DIAMONDS = "diamonds",
-}
+import type { Pronoun } from "./types-and-templates/pronouns-and-genders";
+import type {
+  WalletPockets,
+  ScoreOperation,
+} from "./types-and-templates/game-operations";
 
 export class Character {
   name: string;
@@ -36,5 +30,7 @@ export class Character {
     } else {
       this.wallet[pocket] -= amount;
     }
+
+    return this.wallet[pocket];
   }
 }
