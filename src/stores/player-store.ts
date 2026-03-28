@@ -1,20 +1,32 @@
+// libraries
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { createJSONStorage, persist } from "zustand/middleware";
+// logic
 import { Player } from "../logic/player";
-import { Character } from "../logic/character";
+// types
 import type {
   WalletPockets,
   ScoreOperation,
 } from "../logic/types-and-templates/game-operations";
+import type {
+  Pronoun,
+  Gender,
+} from "../logic/types-and-templates/pronouns-and-genders";
+import type {
+  Money,
+  Diamonds,
+} from "../logic/types-and-templates/game-operations";
 
 interface PlayerStore {
   name: string;
-  pronouns: string; // or your Pronoun type
+  pronouns: Pronoun;
   wallet: {
-    money: number;
-    diamonds: number;
+    money: Money;
+    diamonds: Diamonds;
   };
+  changeName: (newName: string) => void;
+  changePronouns: (newPronouns: Pronoun) => void;
   modifyWallet: (
     pocket: WalletPockets,
     amount: number,
@@ -28,6 +40,18 @@ export const usePlayerStore = create()(
       name: Player.name,
       pronouns: Player.pronouns,
       wallet: Player.wallet,
+
+      changeName: (newName: string) => {
+        set((state: PlayerStore) => {
+          state.name = newName;
+        });
+      },
+
+      changePronouns: (newPronouns: Pronoun) => {
+        set((state: PlayerStore) => {
+          state.pronouns = newPronouns;
+        });
+      },
 
       modifyWallet: (
         pocket: WalletPockets,

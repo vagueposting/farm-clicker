@@ -6,6 +6,6 @@ export interface Pronoun {
   plural: boolean;
 }
 
-type Gender = "male" | "female";
+export type Gender = "male" | "female";
 
 export type HumanGenders = Gender & "nonbinary";

@@ -2,14 +2,16 @@ import type { Pronoun } from "./types-and-templates/pronouns-and-genders";
 import type {
   WalletPockets,
   ScoreOperation,
+  Money,
+  Diamonds,
 } from "./types-and-templates/game-operations";
 
 export class Character {
   name: string;
   pronouns: Pronoun;
   wallet: {
-    money: number;
-    diamonds: number;
+    money: Money;
+    diamonds: Diamonds;
   };
   constructor(name: string, pronouns: Pronoun) {
     this.name = name;
