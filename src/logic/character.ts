@@ -1,9 +1,10 @@
 import type { Pronoun } from "./types-and-templates/pronouns-and-genders";
 import type {
-  WalletPockets,
   ScoreOperation,
+  Item,
   Money,
   Diamonds,
+  Currencies,
 } from "./types-and-templates/game-operations";
 
 export class Character {
@@ -13,6 +14,7 @@ export class Character {
     money: Money;
     diamonds: Diamonds;
   };
+  inventory: Item[];
   constructor(name: string, pronouns: Pronoun) {
     this.name = name;
     this.pronouns = pronouns;
@@ -20,10 +22,11 @@ export class Character {
       money: 0,
       diamonds: 0,
     };
+    this.inventory = [];
   }
 
   changeWalletBalance(
-    pocket: WalletPockets,
+    pocket: Currencies,
     amount: number,
     operation: ScoreOperation,
   ) {

@@ -3,16 +3,13 @@ import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { createJSONStorage, persist } from "zustand/middleware";
 // logic
-import { Player } from "../logic/player";
+import { Player, rehydratePlayer } from "../logic/player";
 // types
 import type {
   WalletPockets,
   ScoreOperation,
 } from "../logic/types-and-templates/game-operations";
-import type {
-  Pronoun,
-  Gender,
-} from "../logic/types-and-templates/pronouns-and-genders";
+import type { Pronoun } from "../logic/types-and-templates/pronouns-and-genders";
 import type {
   Money,
   Diamonds,
@@ -32,9 +29,10 @@ interface PlayerStore {
     amount: number,
     dir: ScoreOperation,
   ) => void;
+  syncFromPlayer: () => void;
 }
 
-export const usePlayerStore = create()(
+export const usePlayerStore = create<PlayerStore>()(
   persist(
     immer((set, get) => ({
       name: Player.name,
@@ -63,10 +61,22 @@ export const usePlayerStore = create()(
           state.wallet[pocket] = newBalance;
         });
       },
+      syncFromPlayer: () => {
+        set((state: PlayerStore) => {
+          state.name = Player.name;
+          state.pronouns = Player.pronouns;
+          state.wallet = Player.wallet;
+        });
+      },
     })),
     {
       name: "player-data",
       storage: createJSONStorage(() => localStorage),
+      onRehydrateStorage: () => (state: PlayerStore | undefined) => {
+        if (state) {
+          rehydratePlayer(state);
+        }
+      },
     },
   ),
 );

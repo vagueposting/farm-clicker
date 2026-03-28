@@ -1,7 +1,4 @@
-import type {
-  Modifiers,
-  Currencies,
-} from "./types-and-templates/game-operations";
+import { Modifiers, Currencies } from "./types-and-templates/game-operations";
 
 export class PriceHandling {
   baseValue: number;
