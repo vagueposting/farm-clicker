@@ -18,11 +18,17 @@ export enum Rarities {
   SSR = "Supreme Rare",
 }
 
+export enum ItemCats {
+  Crops,
+}
+
 export interface Item {
   name: string;
   id: number;
   description: string;
+  category: ItemCats;
   rarity: Rarities;
+  amount: number;
   value: {
     buy: PriceHandling;
     sell: PriceHandling;
@@ -32,6 +38,8 @@ export interface Item {
     canBeSold: boolean;
   };
 }
+
+export type Inventory = Map<string, Item>;
 
 // Currency types
 export type Money = number;

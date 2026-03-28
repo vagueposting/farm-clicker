@@ -1,7 +1,7 @@
 import type { Pronoun } from "./types-and-templates/pronouns-and-genders";
 import type {
   ScoreOperation,
-  Item,
+  Inventory,
   Money,
   Diamonds,
   Currencies,
@@ -14,7 +14,7 @@ export class Character {
     money: Money;
     diamonds: Diamonds;
   };
-  inventory: Item[];
+  inventory: Inventory;
   constructor(name: string, pronouns: Pronoun) {
     this.name = name;
     this.pronouns = pronouns;
@@ -22,7 +22,7 @@ export class Character {
       money: 0,
       diamonds: 0,
     };
-    this.inventory = [];
+    this.inventory = new Map();
   }
 
   changeWalletBalance(

@@ -2,6 +2,7 @@ import { Character } from "./character";
 import type { Pronoun } from "./types-and-templates/pronouns-and-genders";
 import type {
   Item,
+  Inventory,
   Money,
   Diamonds,
 } from "./types-and-templates/game-operations";
@@ -18,7 +19,7 @@ export const rehydratePlayer = (data: {
   name: string;
   pronouns: Pronoun;
   wallet: { money: Money; diamonds: Diamonds };
-  inventory: Item[];
+  inventory: Inventory;
 }) => {
   Player.name = data.name;
   Player.pronouns = data.pronouns;

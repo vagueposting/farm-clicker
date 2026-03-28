@@ -1,11 +1,14 @@
 import { PriceHandling } from "./priceHandling";
 import type { Item, Rarities } from "./types-and-templates/game-operations";
+import { ItemCats } from "./types-and-templates/game-operations";
 
 export class CropType implements Item {
   name: string;
   id: number;
-  rarity: Rarities;
   description: string;
+  category: ItemCats;
+  rarity: Rarities;
+  amount: number;
   value: {
     buy: PriceHandling;
     sell: PriceHandling;
@@ -25,18 +28,19 @@ export class CropType implements Item {
       buy: PriceHandling;
       sell: PriceHandling;
     },
-    conditions: {
-      canBeSold: boolean;
-      unlocked: boolean;
-    },
     growTime: number,
   ) {
     this.name = name;
     this.id = id;
     this.rarity = rarity;
+    this.amount = 0;
     this.description = description;
+    this.category = ItemCats.Crops;
     this.value = value;
-    this.conditions = conditions;
+    this.conditions = {
+      unlocked: false,
+      canBeSold: true,
+    };
     this.growTime = growTime;
   }
 }

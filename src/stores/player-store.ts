@@ -5,15 +5,15 @@ import { createJSONStorage, persist } from "zustand/middleware";
 // logic
 import { Player, rehydratePlayer } from "../logic/player";
 // types
-import type {
-  WalletPockets,
-  ScoreOperation,
-} from "../logic/types-and-templates/game-operations";
+import type { ScoreOperation } from "../logic/types-and-templates/game-operations";
 import type { Pronoun } from "../logic/types-and-templates/pronouns-and-genders";
 import type {
+  Item,
+  Inventory,
   Money,
   Diamonds,
 } from "../logic/types-and-templates/game-operations";
+import { Currencies } from "../logic/types-and-templates/game-operations";
 
 interface PlayerStore {
   name: string;
@@ -22,13 +22,15 @@ interface PlayerStore {
     money: Money;
     diamonds: Diamonds;
   };
+  inventory: Inventory;
   changeName: (newName: string) => void;
   changePronouns: (newPronouns: Pronoun) => void;
   modifyWallet: (
-    pocket: WalletPockets,
+    pocket: Currencies,
     amount: number,
     dir: ScoreOperation,
   ) => void;
+  addToInventory: (item: Item, amount: number) => void;
   syncFromPlayer: () => void;
 }
 
@@ -38,6 +40,7 @@ export const usePlayerStore = create<PlayerStore>()(
       name: Player.name,
       pronouns: Player.pronouns,
       wallet: Player.wallet,
+      inventory: Player.inventory,
 
       changeName: (newName: string) => {
         set((state: PlayerStore) => {
@@ -52,7 +55,7 @@ export const usePlayerStore = create<PlayerStore>()(
       },
 
       modifyWallet: (
-        pocket: WalletPockets,
+        pocket: Currencies,
         amount: number,
         dir: ScoreOperation,
       ) => {
@@ -60,6 +63,14 @@ export const usePlayerStore = create<PlayerStore>()(
         set((state: PlayerStore) => {
           state.wallet[pocket] = newBalance;
         });
+      },
+      addToInventory: (item: Item, amount: number) => {
+        if (get().inventory.has(item.name)) {
+          set((state) => {
+            const entry = state.inventory.get(item.name);
+            if (entry) entry.amount += amount;
+          });
+        } else return;
       },
       syncFromPlayer: () => {
         set((state: PlayerStore) => {
