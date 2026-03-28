@@ -1,13 +1,13 @@
-import type { Crop } from "./types-and-templates/crop-type";
-import type { Money, Diamonds } from "./types-and-templates/game-operations";
+import { PriceHandling } from "./priceHandling";
 
-class CropType implements Crop {
+import { Currencies } from "./types-and-templates/game-operations";
+
+export class CropType {
   name: string;
   description: string;
-  quantity: number;
   value: {
-    buy: Money | Diamonds;
-    sell: Money | Diamonds;
+    buy: PriceHandling;
+    sell: PriceHandling;
   };
   growTime: number;
   unlocked: boolean;
@@ -15,13 +15,15 @@ class CropType implements Crop {
   constructor(
     name: string,
     description: string,
-    value: Crop["value"],
+    value: {
+      buy: PriceHandling;
+      sell: PriceHandling;
+    },
     growTime: number,
     unlocked: boolean,
   ) {
     this.name = name;
     this.description = description;
-    this.quantity = 0;
     this.value = value;
     this.growTime = growTime;
     this.unlocked = unlocked;
@@ -34,9 +36,9 @@ export class CropField {
     planted: number;
     capacity: number;
   };
-  assignedCrop: Crop;
+  assignedCrop: CropType;
 
-  constructor(name: string, capacity: number, crop: Crop) {
+  constructor(name: string, capacity: number, crop: CropType) {
     this.name = name;
     this.amount = {
       planted: 0,
