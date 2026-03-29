@@ -1,5 +1,7 @@
 import { useCropStore } from "./stores/crop-store";
 
+// TODO: write object initialization logic
+
 let initialized = false;
 /**
  * To be run at the start of App.jsx
