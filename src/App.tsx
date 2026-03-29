@@ -16,8 +16,7 @@ function App() {
       <div className='col-start-1 col-end-5 grid grid-cols-2 p-4 gap-2'>
         <FieldsList />
       </div>
-      <div className='col-start-5 col-start 6'>
-        <p>Test</p>
+      <div className='col-start-5 col-start 6 p-2'>
         <Inventory />
       </div>
     </Container>
