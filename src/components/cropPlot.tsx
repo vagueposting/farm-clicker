@@ -1,4 +1,6 @@
+import { ScoreOperation } from "../logic/types-and-templates/game-operations";
 import { ActiveCropField, useCropStore } from "../stores/crop-store";
+import { usePlayerStore } from "../stores/player-store";
 
 // TODO: Implement "wait to grow" cycle
 // TODO: implement being able to plan 1/5/10/max
@@ -15,12 +17,20 @@ interface PlotButtonProps {
 
 export function CropPlot({ field }: CropPlotProps) {
   const { plantCrop, harvestCrops } = useCropStore();
+  const { wallet, modifyWallet } = usePlayerStore();
 
   function handleHarvest(fieldID: number) {
     harvestCrops(fieldID);
   }
 
-  function handlePlanting(fieldID: number, crops = 1) {
+  async function handlePlanting(fieldID: number, crops = 1) {
+    setTimeout(() => {}, 500);
+    const cost = field.assignedCrop.value.buy.finalPrice;
+    const pocket = field.assignedCrop.value.buy.currency;
+
+    if (wallet.money === -500 || wallet.money - cost < -500) return;
+
+    modifyWallet(pocket, crops * cost, ScoreOperation.minus);
     plantCrop(fieldID, crops);
   }
 

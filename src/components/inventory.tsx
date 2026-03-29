@@ -33,9 +33,11 @@ export function Inventory({ extraClasses = "" }: InventoryProps) {
       <h1 className='text-xl'>
         <b>Inventory</b>
       </h1>
-      {processedInv.map((item) => (
-        <ItemDiv key={item.id} item={item} />
-      ))}
+      {processedInv.map((item) => {
+        if (item.amount <= 0) return <></>;
+
+        return <ItemDiv key={item.id} item={item} />;
+      })}
     </div>
   );
 }
@@ -52,7 +54,6 @@ function ItemDiv({ item }: ItemProps) {
   );
 }
 
-// TODO: write handleSell()
 function SellItem({ quantity, item }: SellProps) {
   const { sellItem } = usePlayerStore();
 
@@ -66,7 +67,7 @@ function SellItem({ quantity, item }: SellProps) {
       onClick={handleSell}
       disabled={item.amount === 0}
     >
-      Sell Item
+      Sell Item ({quantity})
     </button>
   );
 }

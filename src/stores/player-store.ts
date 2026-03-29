@@ -59,6 +59,7 @@ export const usePlayerStore = create<PlayerStore>()(
         });
       },
 
+      // FIXME: Issue where wallet value becomes null or NaN when you spend
       modifyWallet: (
         pocket: Currencies,
         amount: number,
@@ -66,10 +67,11 @@ export const usePlayerStore = create<PlayerStore>()(
       ) => {
         set((state: PlayerStore) => {
           const current = state.wallet[pocket];
+          // Placeholder for bankruptcy mechanic.
+          if (dir === ScoreOperation.minus && current - amount < -500) return;
           state.wallet[pocket] =
             dir === ScoreOperation.plus ? current + amount : current - amount;
         });
-        // Player.wallet[pocket] = get().wallet[pocket];
       },
       addToInventory: (item: StoredItem, amount: number) => {
         if (get().inventory[item.id]) {
