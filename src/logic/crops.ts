@@ -1,47 +1,22 @@
 import { PriceHandling } from "./priceHandling";
-import type { Item, Rarities } from "./types-and-templates/game-operations";
+import { Item } from "./types-and-templates/game-operations";
+import type { ItemData, Rarities } from "./types-and-templates/game-operations";
 import { ItemCats } from "./types-and-templates/game-operations";
 
-export class CropType implements Item {
-  name: string;
-  id: number;
-  description: string;
-  category: ItemCats;
-  rarity: Rarities;
-  amount: number;
-  value: {
-    buy: PriceHandling;
-    sell: PriceHandling;
-  };
+export class CropType extends Item {
   growTime: number;
-  conditions: {
-    unlocked: boolean;
-    canBeSold: boolean;
-  };
 
-  constructor(
-    name: string,
-    id: number,
-    description: string,
-    rarity: Rarities,
-    value: {
-      buy: PriceHandling;
-      sell: PriceHandling;
-    },
-    growTime: number,
-  ) {
-    this.name = name;
-    this.id = id;
-    this.rarity = rarity;
-    this.amount = 0;
-    this.description = description;
-    this.category = ItemCats.Crops;
-    this.value = value;
-    this.conditions = {
-      unlocked: false,
-      canBeSold: true,
-    };
-    this.growTime = growTime;
+  constructor(data: ItemData & { growTime: number }) {
+    super({
+      ...data,
+      category: ItemCats.Crops, // always force category
+      conditions: data.conditions ?? { unlocked: false, canBeSold: true },
+    });
+    this.growTime = data.growTime;
+  }
+
+  static fromJSON(raw: unknown): CropType {
+    return new CropType(raw as ItemData & { growTime: number });
   }
 }
 

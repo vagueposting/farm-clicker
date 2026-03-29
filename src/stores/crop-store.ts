@@ -61,6 +61,7 @@ export const useCropStore = create<CropStore>()(
         set((state) => {
           state.fields.push(activeField);
         });
+        console.log(activeField);
         return activeField;
       },
 
@@ -92,7 +93,7 @@ export const useCropStore = create<CropStore>()(
           state.fields[target[0]].amount.planted = 0;
         });
 
-        usePlayerStore.getState().addToInventory(crop, amount);
+        usePlayerStore.getState().addToInventory({ ...crop, amount }, amount);
       },
     })),
     {
