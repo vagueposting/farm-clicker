@@ -1,5 +1,5 @@
 import type { Money, Diamonds } from "./game-operations";
-
+// TODO: consider for deletion
 export interface Crop {
   name: string;
   description: string;

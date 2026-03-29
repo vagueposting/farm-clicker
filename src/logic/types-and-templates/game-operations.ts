@@ -53,6 +53,7 @@ export class Item {
   conditions: { unlocked: boolean; canBeSold: boolean };
 
   constructor(data: ItemData) {
+    console.log("Item constructor data.currency:", data.currency);
     this.name = data.name;
     this.id = data.id;
     this.description = data.description;

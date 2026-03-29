@@ -5,7 +5,7 @@ import { createJSONStorage, persist } from "zustand/middleware";
 // logic
 import { Player, rehydratePlayer } from "../logic/player";
 // types
-import type { ScoreOperation } from "../logic/types-and-templates/game-operations";
+import { ScoreOperation } from "../logic/types-and-templates/game-operations";
 import type { Pronoun } from "../logic/types-and-templates/pronouns-and-genders";
 import type {
   StoredItem,
@@ -13,8 +13,10 @@ import type {
   Money,
   Diamonds,
 } from "../logic/types-and-templates/game-operations";
+import { PriceHandling } from "../logic/priceHandling";
 import { Currencies } from "../logic/types-and-templates/game-operations";
-import { CropType } from "../logic/crops";
+
+type ItemManipulation = (item: StoredItem, amount: number) => void;
 
 interface PlayerStore {
   name: string;
@@ -31,7 +33,9 @@ interface PlayerStore {
     amount: number,
     dir: ScoreOperation,
   ) => void;
-  addToInventory: (item: StoredItem, amount: number) => void;
+  addToInventory: ItemManipulation;
+  useItem: ItemManipulation;
+  sellItem: ItemManipulation;
   syncFromPlayer: () => void;
 }
 
@@ -40,7 +44,7 @@ export const usePlayerStore = create<PlayerStore>()(
     immer((set, get) => ({
       name: Player.name,
       pronouns: Player.pronouns,
-      wallet: Player.wallet,
+      wallet: { ...Player.wallet },
       inventory: Player.inventory,
 
       changeName: (newName: string) => {
@@ -60,10 +64,12 @@ export const usePlayerStore = create<PlayerStore>()(
         amount: number,
         dir: ScoreOperation,
       ) => {
-        const newBalance = Player.changeWalletBalance(pocket, amount, dir);
         set((state: PlayerStore) => {
-          state.wallet[pocket] = newBalance;
+          const current = state.wallet[pocket];
+          state.wallet[pocket] =
+            dir === ScoreOperation.plus ? current + amount : current - amount;
         });
+        // Player.wallet[pocket] = get().wallet[pocket];
       },
       addToInventory: (item: StoredItem, amount: number) => {
         if (get().inventory[item.id]) {
@@ -75,12 +81,35 @@ export const usePlayerStore = create<PlayerStore>()(
             state.inventory[item.id] = { ...item, amount };
           });
         }
+        return;
+      },
+      useItem: (item: StoredItem, amount: number) => {
+        if (get().inventory[item.id]) {
+          set((state) => {
+            state.inventory[item.id].amount -= amount;
+          });
+        }
+
+        return;
+      },
+      sellItem: (item: StoredItem, amount: number) => {
+        get().useItem(item, amount);
+
+        const liveItem = get().inventory[item.id];
+        console.log("liveItem:", liveItem);
+        console.log("sell object:", liveItem?.value?.sell);
+        console.log("currency:", liveItem?.value?.sell?.currency);
+        console.log("finalPrice:", liveItem?.value?.sell?.finalPrice);
+        const price = liveItem.value.sell.finalPrice;
+        const currency = liveItem.value.sell.currency;
+
+        get().modifyWallet(currency, price, ScoreOperation.plus);
       },
       syncFromPlayer: () => {
         set((state: PlayerStore) => {
           state.name = Player.name;
           state.pronouns = Player.pronouns;
-          state.wallet = Player.wallet;
+          state.wallet = { ...Player.wallet };
         });
       },
     })),
@@ -89,6 +118,27 @@ export const usePlayerStore = create<PlayerStore>()(
       storage: createJSONStorage(() => localStorage),
       onRehydrateStorage: () => (state: PlayerStore | undefined) => {
         if (state) {
+          for (const key in state.inventory) {
+            const raw = state.inventory[key];
+            // raw.value.buy/sell are plain objects with baseValue, modifiers, currency
+            // We need to reconstruct PriceHandling instances from them
+            const revivedItem = {
+              ...raw,
+              value: {
+                buy: new PriceHandling(
+                  raw.value.buy.baseValue,
+                  raw.value.buy.currency,
+                  raw.value.buy.modifiers,
+                ),
+                sell: new PriceHandling(
+                  raw.value.sell.baseValue,
+                  raw.value.sell.currency,
+                  raw.value.sell.modifiers,
+                ),
+              },
+            } as StoredItem;
+            state.inventory[key] = revivedItem;
+          }
           rehydratePlayer(state);
         }
       },

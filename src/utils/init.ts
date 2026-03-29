@@ -1,6 +1,6 @@
-import { useCropStore } from "./stores/crop-store";
-import { CropType } from "./logic/crops";
-import cropData from "./data/crops.json";
+import { useCropStore } from "../stores/crop-store";
+import { CropType } from "../logic/crops";
+import cropData from "../data/crops.json";
 import { enableMapSet } from "immer";
 
 let initialized = false;

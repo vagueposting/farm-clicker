@@ -6,6 +6,7 @@
             "description": "One of the Three Sisters, this crop can be ground into flour, chopped and pounded into a meal, or even eaten straight from the cob. Great with butter!",
             "category": 0,
             "rarity": "Common",
+            "currency": "money",
             "value": {
                 "buy": {
                     "baseValue": 10,

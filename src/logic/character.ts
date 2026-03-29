@@ -22,7 +22,7 @@ export class Character {
       money: 0,
       diamonds: 0,
     };
-    this.inventory = new Map();
+    this.inventory = {};
   }
 
   changeWalletBalance(
@@ -30,6 +30,9 @@ export class Character {
     amount: number,
     operation: ScoreOperation,
   ) {
+    if (!(pocket in this.wallet)) {
+      throw new Error(`Invalid wallet pocket: "${pocket}"`);
+    }
     if (operation === "PLUS") {
       this.wallet[pocket] += amount;
     } else {
