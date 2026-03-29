@@ -2,8 +2,9 @@ import "./App.css";
 import { init } from "./init";
 import { CropPlot } from "./components/cropPlot";
 import { Container } from "./components/container";
-import { useCropStore } from "./stores/crop-store";
+import { Inventory } from "./components/inventory";
 import { useEffect } from "react";
+import { useCropStore } from "./stores/crop-store";
 
 function App() {
   useEffect(() => {
@@ -17,6 +18,7 @@ function App() {
       </div>
       <div className='col-start-5 col-start 6'>
         <p>Test</p>
+        <Inventory />
       </div>
     </Container>
   );

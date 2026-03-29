@@ -3,9 +3,8 @@ import { CropType } from "./logic/crops";
 import cropData from "./data/crops.json";
 import { enableMapSet } from "immer";
 
-// TODO: write object initialization logic
-
 let initialized = false;
+
 /**
  * To be run at the start of App.jsx
  */

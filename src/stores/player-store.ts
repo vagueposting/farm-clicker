@@ -66,19 +66,15 @@ export const usePlayerStore = create<PlayerStore>()(
         });
       },
       addToInventory: (item: StoredItem, amount: number) => {
-        console.log(item);
-        if (get().inventory.has(item.id)) {
+        if (get().inventory[item.id]) {
           set((state) => {
-            const entry = state.inventory.get(item.id);
-            if (entry !== undefined && typeof entry.amount === "number")
-              entry.amount += amount;
+            state.inventory[item.id].amount += amount;
           });
         } else {
           set((state) => {
-            state.inventory.set(item.id, item);
+            state.inventory[item.id] = { ...item, amount };
           });
         }
-        console.log(get().inventory);
       },
       syncFromPlayer: () => {
         set((state: PlayerStore) => {

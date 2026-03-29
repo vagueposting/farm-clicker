@@ -83,7 +83,7 @@ export type StoredItem = Item & {
   amount: number;
 };
 
-export type Inventory = Map<number, StoredItem>;
+export type Inventory = Record<number, StoredItem>;
 
 // Currency types
 export type Money = number;
