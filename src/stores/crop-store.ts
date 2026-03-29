@@ -7,7 +7,7 @@ import { CropField, CropType } from "../logic/crops";
 // other stores
 import { usePlayerStore } from "./player-store";
 
-type ActiveCropField = CropField & {
+export type ActiveCropField = CropField & {
   id: number;
 };
 
@@ -18,6 +18,7 @@ interface CropStore {
   targetField: (plotID: number) => [number, ActiveCropField];
   addField: (name: string, capacity: number, crop: CropType) => ActiveCropField;
   plantCrop: (plantID: number, crops: number) => void;
+  harvestCrops: (plotID: number) => void;
 }
 
 export const useCropStore = create<CropStore>()(
@@ -79,6 +80,11 @@ export const useCropStore = create<CropStore>()(
 
       harvestCrops: (plotID: number) => {
         const target = get().targetField(plotID);
+
+        if (target[0] === -1) return;
+
+        if (target[1].amount.planted === 0) return;
+
         const crop = target[1].assignedCrop;
         const amount = target[1].amount.planted;
 
