@@ -1,0 +1,27 @@
+{
+    "crops": [
+        {
+            "name": "Corn",
+            "id": 1,
+            "description": "One of the Three Sisters, this crop can be ground into flour, chopped and pounded into a meal, or even eaten straight from the cob. Great with butter!",
+            "category": 0,
+            "rarity": "Common",
+            "value": {
+                "buy": {
+                    "baseValue": 10,
+                    "modifiers": {
+                        "flatAdd": 0,
+                        "multiplier": 1
+                    }
+                },
+                "sell": {
+                    "baseValue": 15,
+                    "modifiers": {
+                        "flatAdd": 0,
+                        "multiplier": 1
+                    }
+                }
+            }
+        }
+    ]
+}
