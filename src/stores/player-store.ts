@@ -65,9 +65,9 @@ export const usePlayerStore = create<PlayerStore>()(
         });
       },
       addToInventory: (item: Item, amount: number) => {
-        if (get().inventory.has(item.name)) {
+        if (get().inventory.has(item.id)) {
           set((state) => {
-            const entry = state.inventory.get(item.name);
+            const entry = state.inventory.get(item.id);
             if (entry) entry.amount += amount;
           });
         } else return;

@@ -23,7 +23,14 @@ function App() {
 
   return (
     <Container>
-      <CropPlot field={sampleField} />
+      <div class='col-start-1 col-end-5 grid grid-cols-2 p-4 gap-2'>
+        <CropPlot field={sampleField} />
+        <CropPlot field={sampleField} />
+        <CropPlot field={sampleField} />
+      </div>
+      <div class='col-start-5 col-start 6'>
+        <p>Test</p>
+      </div>
     </Container>
   );
 }

@@ -39,7 +39,7 @@ export interface Item {
   };
 }
 
-export type Inventory = Map<string, Item>;
+export type Inventory = Map<number, Item>;
 
 // Currency types
 export type Money = number;

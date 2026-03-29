@@ -10,7 +10,7 @@ interface PlotButtonProps {
 
 export function CropPlot({ field }: CropPlotProps) {
   return (
-    <div className='flex flex-col justify-center align-middle text-center border-4 border-black w-3/6'>
+    <div className='flex flex-col justify-center align-middle text-center border-2 border-black w-auto'>
       <p>{field.name}</p>
       <p>
         {field.amount.planted} / {field.amount.capacity}
