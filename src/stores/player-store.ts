@@ -8,7 +8,7 @@ import { Player, rehydratePlayer } from "../logic/player";
 import type { ScoreOperation } from "../logic/types-and-templates/game-operations";
 import type { Pronoun } from "../logic/types-and-templates/pronouns-and-genders";
 import type {
-  Item,
+  StoredItem,
   Inventory,
   Money,
   Diamonds,
@@ -30,7 +30,7 @@ interface PlayerStore {
     amount: number,
     dir: ScoreOperation,
   ) => void;
-  addToInventory: (item: Item, amount: number) => void;
+  addToInventory: (item: StoredItem, amount: number) => void;
   syncFromPlayer: () => void;
 }
 
@@ -64,11 +64,12 @@ export const usePlayerStore = create<PlayerStore>()(
           state.wallet[pocket] = newBalance;
         });
       },
-      addToInventory: (item: Item, amount: number) => {
+      addToInventory: (item: StoredItem, amount: number) => {
         if (get().inventory.has(item.id)) {
           set((state) => {
             const entry = state.inventory.get(item.id);
-            if (entry) entry.amount += amount;
+            if (entry !== undefined && typeof entry.amount === "number")
+              entry.amount += amount;
           });
         } else return;
       },

@@ -1,5 +1,8 @@
 import { ActiveCropField, useCropStore } from "../stores/crop-store";
 
+// TODO: Implement "wait to grow" cycle
+// TODO: implement being able to plan 1/5/10/max
+
 interface CropPlotProps {
   field: ActiveCropField;
 }

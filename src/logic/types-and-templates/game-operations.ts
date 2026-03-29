@@ -22,13 +22,13 @@ export enum ItemCats {
   Crops,
 }
 
+// for item definitions
 export interface Item {
   name: string;
   id: number;
   description: string;
   category: ItemCats;
   rarity: Rarities;
-  amount: number;
   value: {
     buy: PriceHandling;
     sell: PriceHandling;
@@ -39,7 +39,12 @@ export interface Item {
   };
 }
 
-export type Inventory = Map<number, Item>;
+// for items inside of inventories
+export type StoredItem = Item & {
+  amount: number;
+};
+
+export type Inventory = Map<number, StoredItem>;
 
 // Currency types
 export type Money = number;
