@@ -26,18 +26,16 @@ export function Inventory({ extraClasses = "" }: InventoryProps) {
     "flex flex-col gap-3 p-2 h-full",
   );
 
-  const processedInv = Object.values(inventory);
+  const processedInv = Object.values(inventory).filter((i) => i.amount > 0);
 
   return (
     <div className={classList}>
       <h1 className='text-xl'>
         <b>Inventory</b>
       </h1>
-      {processedInv.map((item) => {
-        if (item.amount <= 0) return <></>;
-
-        return <ItemDiv key={item.id} item={item} />;
-      })}
+      {processedInv.map((item) => (
+        <ItemDiv key={item.id} item={item} />
+      ))}
     </div>
   );
 }

@@ -6,6 +6,7 @@ import { createJSONStorage, persist } from "zustand/middleware";
 import { CropField, CropType } from "../logic/crops";
 // other stores
 import { usePlayerStore } from "./player-store";
+import { reviveStoredItem } from "../utils/reviveItem";
 
 export type ActiveCropField = CropField & {
   id: number;
@@ -61,7 +62,7 @@ export const useCropStore = create<CropStore>()(
         set((state) => {
           state.fields.push(activeField);
         });
-        console.log(activeField);
+        // console.log(activeField);
         return activeField;
       },
 
@@ -99,6 +100,16 @@ export const useCropStore = create<CropStore>()(
     {
       name: "crop-field-data",
       storage: createJSONStorage(() => localStorage),
+      onRehydrateStorage: () => (state: CropStore | undefined) => {
+        if (!state) return;
+        state.fields = state.fields.map((field) => ({
+          ...field,
+          assignedCrop: {
+            ...field.assignedCrop,
+            value: reviveStoredItem({ ...field.assignedCrop, amount: 0 }).value,
+          },
+        }));
+      },
     },
   ),
 );

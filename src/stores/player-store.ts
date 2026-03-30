@@ -15,6 +15,7 @@ import type {
 } from "../logic/types-and-templates/game-operations";
 import { PriceHandling } from "../logic/priceHandling";
 import { Currencies } from "../logic/types-and-templates/game-operations";
+import { reviveStoredItem } from "../utils/reviveItem";
 
 type ItemManipulation = (item: StoredItem, amount: number) => void;
 
@@ -60,14 +61,22 @@ export const usePlayerStore = create<PlayerStore>()(
       },
 
       // FIXME: Issue where wallet value becomes null or NaN when you spend
-      modifyWallet: (
-        pocket: Currencies,
-        amount: number,
-        dir: ScoreOperation,
-      ) => {
+      // I think it's here but I am not sure.
+      modifyWallet: (pocket, amount, dir) => {
         set((state: PlayerStore) => {
+          /* console.log("modifyWallet called");
+          console.log("  pocket:", JSON.stringify(pocket));
+          console.log("  full wallet object:", JSON.stringify(state.wallet));
+          console.log("  wallet[pocket]:", state.wallet[pocket]);
+          console.log("  typeof wallet[pocket]:", typeof state.wallet[pocket]); */
           const current = state.wallet[pocket];
-          // Placeholder for bankruptcy mechanic.
+          if (current === undefined || current === null) {
+            console.error(
+              `modifyWallet: wallet["${pocket}"] is ${current}. ` +
+                `Check that Currencies enum values match wallet keys exactly.`,
+            );
+            return;
+          }
           if (dir === ScoreOperation.minus && current - amount < -500) return;
           state.wallet[pocket] =
             dir === ScoreOperation.plus ? current + amount : current - amount;
@@ -95,17 +104,19 @@ export const usePlayerStore = create<PlayerStore>()(
         return;
       },
       sellItem: (item: StoredItem, amount: number) => {
-        get().useItem(item, amount);
+        // Read BEFORE any set() call, while PriceHandling instances are still intact
+        const entry = get().inventory[item.id];
+        if (!entry) return;
 
-        const liveItem = get().inventory[item.id];
-        console.log("liveItem:", liveItem);
-        console.log("sell object:", liveItem?.value?.sell);
-        console.log("currency:", liveItem?.value?.sell?.currency);
-        console.log("finalPrice:", liveItem?.value?.sell?.finalPrice);
-        const price = liveItem.value.sell.finalPrice;
-        const currency = liveItem.value.sell.currency;
+        const price = entry.value.sell.finalPrice; // getter exists here ✓
+        const currency = entry.value.sell.currency;
 
-        get().modifyWallet(currency, price, ScoreOperation.plus);
+        // Now mutate
+        set((state) => {
+          state.inventory[item.id].amount -= amount;
+          const current = state.wallet[currency];
+          state.wallet[currency] = current + price * amount;
+        });
       },
       syncFromPlayer: () => {
         set((state: PlayerStore) => {
@@ -119,6 +130,13 @@ export const usePlayerStore = create<PlayerStore>()(
       name: "player-data",
       storage: createJSONStorage(() => localStorage),
       onRehydrateStorage: () => (state: PlayerStore | undefined) => {
+        /* console.log("⏱️ onRehydrateStorage FIRED at:", Date.now());
+        console.log("RAW rehydrated state:", JSON.stringify(state?.wallet));
+        console.log("RAW wallet.money type:", typeof state?.wallet?.money);
+        console.log(
+          "RAW wallet.diamonds type:",
+          typeof state?.wallet?.diamonds,
+        ); */
         if (state) {
           for (const key in state.inventory) {
             const raw = state.inventory[key];
@@ -126,22 +144,15 @@ export const usePlayerStore = create<PlayerStore>()(
             // We need to reconstruct PriceHandling instances from them
             const revivedItem = {
               ...raw,
-              value: {
-                buy: new PriceHandling(
-                  raw.value.buy.baseValue,
-                  raw.value.buy.currency,
-                  raw.value.buy.modifiers,
-                ),
-                sell: new PriceHandling(
-                  raw.value.sell.baseValue,
-                  raw.value.sell.currency,
-                  raw.value.sell.modifiers,
-                ),
-              },
+              value: reviveStoredItem(raw).value,
             } as StoredItem;
             state.inventory[key] = revivedItem;
           }
           rehydratePlayer(state);
+          /* console.log(
+            "Player.wallet AFTER rehydratePlayer:",
+            JSON.stringify(Player.wallet),
+          ); */
         }
       },
     },

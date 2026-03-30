@@ -1,5 +1,6 @@
 import { ScoreOperation } from "../logic/types-and-templates/game-operations";
 import { ActiveCropField, useCropStore } from "../stores/crop-store";
+import { useEffect } from "react";
 import { usePlayerStore } from "../stores/player-store";
 
 // TODO: Implement "wait to grow" cycle
@@ -18,6 +19,11 @@ interface PlotButtonProps {
 export function CropPlot({ field }: CropPlotProps) {
   const { plantCrop, harvestCrops } = useCropStore();
   const { wallet, modifyWallet } = usePlayerStore();
+
+  /* useEffect(() => {
+    console.log("⏱️ CropPlot mounted at:", Date.now());
+    console.log("wallet on mount:", wallet);
+  }, []); */
 
   function handleHarvest(fieldID: number) {
     harvestCrops(fieldID);
