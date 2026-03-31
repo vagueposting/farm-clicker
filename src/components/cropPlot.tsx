@@ -41,7 +41,7 @@ export function CropPlot({ field }: CropPlotProps) {
   }
 
   return (
-    <div className='flex flex-col justify-center align-middle text-center border-2 border-black w-auto'>
+    <div className='card card-md shadow-md bg-gray-100 flex flex-col justify-center align-middle text-center'>
       <p>{field.name}</p>
       <p>
         {field.amount.planted} / {field.amount.capacity}
@@ -60,7 +60,7 @@ function PlotButton({ text, clickFn, disableIf }: PlotButtonProps) {
   return (
     <>
       <button
-        className='bg-gray-200 p-1 m-2 cursor-pointer'
+        className='bg-gray-300 p-1 m-2 w-3/6 self-center cursor-pointer'
         onClick={clickFn}
         disabled={disableIf}
       >

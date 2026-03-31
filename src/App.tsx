@@ -14,15 +14,7 @@ function App() {
 
   return (
     <Container>
-      <div className='col-start-1 col-end-5 row-start-1 row-end-5 grid grid-cols-2 p-4 gap-2'>
-        <FieldsList />
-      </div>
-      <div className='col-start-5 col-end-6 row-start-1 row-end-5'>
-        <Inventory />
-      </div>
-      <div className='col-start-1 col-end-6 row-start-5 row-end-6 bg-gray-300 p-5'>
-        <PlayerStats />
-      </div>
+      <p>penis</p>
     </Container>
   );
 }
