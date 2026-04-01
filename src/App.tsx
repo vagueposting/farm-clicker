@@ -6,6 +6,7 @@ import { Inventory } from "./components/inventory";
 import { PlayerStats } from "./components/playerStats";
 import { useEffect } from "react";
 import { useCropStore } from "./stores/crop-store";
+import { Sidebar } from "./components/sidebar";
 
 function App() {
   useEffect(() => {
@@ -14,7 +15,9 @@ function App() {
 
   return (
     <Container>
-      <p>penis</p>
+      <Sidebar>
+        <p>Test.</p>
+      </Sidebar>
     </Container>
   );
 }
