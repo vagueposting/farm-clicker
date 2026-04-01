@@ -7,6 +7,7 @@ import { PlayerStats } from "./components/playerStats";
 import { useEffect } from "react";
 import { useCropStore } from "./stores/crop-store";
 import { Sidebar } from "./components/sidebar";
+import "material-icons/iconfont/round.css";
 
 function App() {
   useEffect(() => {
@@ -18,6 +19,7 @@ function App() {
       <Sidebar>
         <p>Test.</p>
       </Sidebar>
+      <PlayerStats position='col-start-9 col-end-11 row-start-1 row-end-4 m-2' />
     </Container>
   );
 }
