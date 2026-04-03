@@ -19,7 +19,7 @@ export function PlayerStats({ dragConstraints }: PlayerStatProps) {
   // Ensure 'top-0 left-0' is set so the element's origin
   // matches the Container's origin exactly.
   const boxClass = cn(
-    "absolute top-0 left-0 shadow-lg z-10 w-40 cursor-pointer",
+    "absolute top-0 right-0 m-4 shadow-lg z-10 w-40 cursor-move",
     folded ? "bg-gray-400" : "bg-white h-auto",
   );
 
@@ -32,14 +32,16 @@ export function PlayerStats({ dragConstraints }: PlayerStatProps) {
       className={boxClass}
     >
       <div
-        onClick={handleFolding}
         className={cn(
           "flex justify-between align-middle pl-2 pr-2 font-bold",
           !folded && "bg-sky-400 text-white",
         )}
       >
-        <span>{folded ? "Info" : "Test"}</span>
-        <span className='material-icons-round'>
+        <span>Info</span>
+        <span
+          className='material-icons-round scale-150 cursor-pointer'
+          onClick={handleFolding}
+        >
           {folded ? "arrow_drop_down" : "arrow_drop_up"}
         </span>
       </div>
