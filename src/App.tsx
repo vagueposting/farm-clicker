@@ -22,8 +22,7 @@ export default function App() {
     <Container ref={statConstraintsRef}>
       {isMounted && <PlayerStats dragConstraints={statConstraintsRef} />}
       <Sidebar>
-        <p>Test.</p>
-        <p>Tell me things about your world.</p>
+        <Inventory />
       </Sidebar>
       <FieldsList />
     </Container>

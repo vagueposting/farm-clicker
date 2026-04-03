@@ -24,6 +24,7 @@ export function Inventory({ extraClasses = "" }: InventoryProps) {
     extraClasses,
     "bg-gray-200",
     "flex flex-col gap-3 p-2 h-full",
+    "overflow-y-auto",
   );
 
   const processedInv = Object.values(inventory).filter((i) => i.amount > 0);
@@ -31,7 +32,7 @@ export function Inventory({ extraClasses = "" }: InventoryProps) {
   return (
     <div className={classList}>
       <h1 className='text-xl'>
-        <b>Inventory</b>
+        <b className='font-mono text-lg'>Inventory</b>
       </h1>
       {processedInv.map((item) => (
         <ItemDiv key={item.id} item={item} />
@@ -42,11 +43,19 @@ export function Inventory({ extraClasses = "" }: InventoryProps) {
 
 function ItemDiv({ item }: ItemProps) {
   return (
-    <div className='flex flex-col p-2 bg-gray-50 border-black border-2'>
+    <div className='flex flex-col p-2 bg-gray-50 shadow-inner'>
       <div className='flex justify-left items-center gap-1'>
-        <span className='font-bold text-lg'>{item.name}</span> - {item.amount}
+        <span className='font-bold text-md'>{item.name}</span> - {item.amount}
       </div>
-      <p className='h-16 text-xs overflow-y-scroll'>{item.description}</p>
+      <p
+        className='h-16 overflow-y-auto'
+        style={{
+          fontSize: "0.65rem",
+          lineHeight: "0.75rem",
+        }}
+      >
+        {item.description}
+      </p>
       <SellItem quantity={1} item={item} />
     </div>
   );
@@ -61,11 +70,11 @@ function SellItem({ quantity, item }: SellProps) {
 
   return (
     <button
-      className='bg-gray-300 p-1 m-2 cursor-pointer'
+      className='btn btn-sm bg-gray-300 border-0 p-1 w-auto self-center'
       onClick={handleSell}
       disabled={item.amount === 0}
     >
-      Sell Item ({quantity})
+      Sell ({quantity})
     </button>
   );
 }
