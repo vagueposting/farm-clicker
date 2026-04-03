@@ -1,6 +1,6 @@
 import { ScoreOperation } from "../logic/types-and-templates/game-operations";
 import { ActiveCropField, useCropStore } from "../stores/crop-store";
-import { useEffect } from "react";
+// import { useEffect } from "react";
 import { usePlayerStore } from "../stores/player-store";
 
 // TODO: Implement "wait to grow" cycle
@@ -60,7 +60,7 @@ function PlotButton({ text, clickFn, disableIf }: PlotButtonProps) {
   return (
     <>
       <button
-        className='bg-gray-300 p-1 m-2 w-3/6 self-center cursor-pointer'
+        className='btn bg-gray-300 border-0 p-1 m-2 w-3/6 self-center cursor-pointer'
         onClick={clickFn}
         disabled={disableIf}
       >

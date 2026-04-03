@@ -15,16 +15,17 @@ export default function App() {
 
   useEffect(() => {
     init();
-    setIsMounted(true); // Signal that the ref is ready
+    setIsMounted(true);
   }, []);
 
   return (
     <Container ref={statConstraintsRef}>
+      {isMounted && <PlayerStats dragConstraints={statConstraintsRef} />}
       <Sidebar>
         <p>Test.</p>
         <p>Tell me things about your world.</p>
       </Sidebar>
-      {isMounted && <PlayerStats dragConstraints={statConstraintsRef} />}
+      <FieldsList />
     </Container>
   );
 }
@@ -33,7 +34,7 @@ function FieldsList() {
   const fields = useCropStore((state) => state.fields);
 
   return (
-    <div>
+    <div className='z-0 flex-1 grid grid-cols-2 auto-rows-min gap-4 p-4 overflow-auto ml-0 lg:ml-64'>
       {fields.map((field) => (
         <CropPlot key={field.id} field={field} />
       ))}
