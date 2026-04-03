@@ -4,22 +4,27 @@ import { CropPlot } from "./components/cropPlot";
 import { Container } from "./components/container";
 import { Inventory } from "./components/inventory";
 import { PlayerStats } from "./components/playerStats";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useCropStore } from "./stores/crop-store";
 import { Sidebar } from "./components/sidebar";
 import "material-icons/iconfont/round.css";
 
-function App() {
+export default function App() {
+  const statConstraintsRef = useRef(null);
+  const [isMounted, setIsMounted] = useState(false);
+
   useEffect(() => {
     init();
+    setIsMounted(true); // Signal that the ref is ready
   }, []);
 
   return (
-    <Container>
+    <Container ref={statConstraintsRef}>
       <Sidebar>
         <p>Test.</p>
+        <p>Tell me things about your world.</p>
       </Sidebar>
-      <PlayerStats position='col-start-9 col-end-11 row-start-1 row-end-4 m-2' />
+      {isMounted && <PlayerStats dragConstraints={statConstraintsRef} />}
     </Container>
   );
 }
@@ -35,5 +40,3 @@ function FieldsList() {
     </div>
   );
 }
-
-export default App;

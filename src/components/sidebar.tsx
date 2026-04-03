@@ -20,7 +20,7 @@ export function Sidebar({ children }: SidebarProps) {
         ></label>
         <div className='bg-gray-200 min-h-full w-64 p-4'>
           {/* Sidebar content here */}
-          <p>Test</p>
+          {children}
         </div>
       </div>
     </div>

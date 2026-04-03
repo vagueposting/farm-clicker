@@ -1,61 +1,63 @@
 import { usePlayerStore } from "../stores/player-store";
 import { useState } from "react";
 import { cn } from "../utils/cn";
+import { motion } from "motion/react";
 
 interface PlayerStatProps {
-  position?: string;
+  dragConstraints: React.RefObject<HTMLDivElement | null>;
 }
 
-export function PlayerStats({ position }: PlayerStatProps) {
+export function PlayerStats({ dragConstraints }: PlayerStatProps) {
   const { wallet } = usePlayerStore();
   const [folded, setFold] = useState(true);
 
-  function handleFolding(e: React.MouseEvent) {
+  const handleFolding = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (folded) {
-      setFold(false);
-    } else {
-      setFold(true);
-    }
-  }
+    setFold(!folded);
+  };
 
-  let div;
-  const headerStyle =
-    "flex flex-row justify-center align-middle cursor-pointer";
-  const shadow = "shadow-lg";
+  // Ensure 'top-0 left-0' is set so the element's origin
+  // matches the Container's origin exactly.
+  const boxClass = cn(
+    "absolute top-0 left-0 shadow-lg z-10 w-40 cursor-pointer",
+    folded ? "bg-gray-400" : "bg-white h-auto",
+  );
 
-  if (folded) {
-    const header = cn(headerStyle, shadow, "bg-gray-200");
-    div = (
-      <div className={position}>
-        <div onClick={handleFolding} className={header}>
-          <span>Info</span>{" "}
-          <span className='material-icons-round'>arrow_drop_down</span>
-        </div>
+  return (
+    <motion.div
+      drag
+      dragMomentum={false}
+      dragConstraints={dragConstraints}
+      dragElastic={0}
+      className={boxClass}
+    >
+      <div
+        onClick={handleFolding}
+        className={cn(
+          "flex justify-between align-middle pl-2 pr-2 font-bold",
+          !folded && "bg-sky-400 text-white",
+        )}
+      >
+        <span>{folded ? "Info" : "Test"}</span>
+        <span className='material-icons-round'>
+          {folded ? "arrow_drop_down" : "arrow_drop_up"}
+        </span>
       </div>
-    );
-  } else {
-    const headerClasses = cn(headerStyle, "bg-cyan-500 cursor-pointer");
-    const divClass = cn(position, "bg-white h-auto", shadow);
-    div = (
-      <div className={divClass}>
-        <div onClick={handleFolding} className={headerClasses}>
-          <span className='text-white'>Info</span>{" "}
-          <span className='material-icons-round text-white'>arrow_drop_up</span>
-        </div>
-        <div className='pl-2 pt-2'>
-          <span className='font-bold'>Balance</span>
-          <ul className='pl-3'>
-            <li>${wallet.money}</li>
-            <li className='flex flex-row align-middle'>
-              <span className='material-icons-round scale-90'>diamond</span>{" "}
+
+      {!folded && (
+        <div className='p-1 text-black'>
+          <p className='flex justify-between align-middle'>
+            <span className='font-bold'>Money</span> ${wallet.money}
+          </p>
+          <p className='flex justify-between align-middle'>
+            <span className='font-bold'>Diamonds</span>{" "}
+            <span className='flex align-middle'>
+              <span className='material-icons-round scale-75'>diamond</span>
               {wallet.diamonds}
-            </li>
-          </ul>
+            </span>
+          </p>
         </div>
-      </div>
-    );
-  }
-
-  return div;
+      )}
+    </motion.div>
+  );
 }

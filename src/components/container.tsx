@@ -1,10 +1,21 @@
+import { forwardRef } from "react";
 import { cn } from "../utils/cn";
 
 interface ContainerProps {
   children: React.ReactNode;
 }
 
-export function Container({ children }: ContainerProps) {
-  const classList = cn("h-screen w-screen grid grid-cols-10 grid-rows-10");
-  return <div className={classList}>{children}</div>;
-}
+const Container = forwardRef<HTMLDivElement, ContainerProps>(
+  ({ children }, ref) => {
+    const classList = cn("h-screen w-screen flex flex-row relative");
+    return (
+      <div ref={ref} className={classList}>
+        {children}
+      </div>
+    );
+  },
+);
+
+Container.displayName = "Container";
+
+export { Container };
