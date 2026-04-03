@@ -5,16 +5,19 @@ interface SidebarProps {
 export function Sidebar({ children }: SidebarProps) {
   return (
     <div className='drawer lg:drawer-open'>
-      <input id='my-drawer-3' type='checkbox' className='drawer-toggle' />
+      <input id='sidebar' type='checkbox' className='drawer-toggle' />
       <div className='drawer-content flex flex-col items-center justify-center'>
         {/* Page content here */}
-        <label htmlFor='my-drawer-3' className='btn drawer-button lg:hidden'>
-          Open drawer
+        <label
+          htmlFor='sidebar'
+          className='btn drawer-button lg:hidden bg-gray-100 border-0 absolute top-0 left-0 m-4 w-8 h-8 shadow-md'
+        >
+          <span className='material-icons-round scale-200'>arrow_right</span>
         </label>
       </div>
       <div className='drawer-side'>
         <label
-          htmlFor='my-drawer-3'
+          htmlFor='sidebar'
           aria-label='close sidebar'
           className='drawer-overlay'
         ></label>
