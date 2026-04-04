@@ -1,14 +1,11 @@
 import { ScoreOperation } from "../logic/types-and-templates/game-operations";
 import { ActiveCropField, useCropStore } from "../stores/crop-store";
-// import { useEffect } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { usePlayerStore } from "../stores/player-store";
+import { useGrowthLoop } from "../hooks/useGrowthLoop";
 
 // TODO: Implement "wait to grow" cycle
 // TODO: implement being able to plan 1/5/10/max
-
-interface CropPlotProps {
-  field: ActiveCropField;
-}
 
 interface PlotButtonProps {
   text: string;
@@ -16,42 +13,95 @@ interface PlotButtonProps {
   disableIf?: boolean;
 }
 
+interface CropPlotProps {
+  field: ActiveCropField;
+}
+
 export function CropPlot({ field }: CropPlotProps) {
   const { plantCrop, harvestCrops } = useCropStore();
   const { wallet, modifyWallet } = usePlayerStore();
+  const [growthProgress, setGrowthProgress] = useState(0);
 
-  /* useEffect(() => {
-    console.log("⏱️ CropPlot mounted at:", Date.now());
-    console.log("wallet on mount:", wallet);
-  }, []); */
+  // Start the growth loop
+  useGrowthLoop();
+
+  // Calculate growth percentage for visual feedback
+  useEffect(() => {
+    if (!field.plantedTimestamps || field.plantedTimestamps.length === 0) {
+      setGrowthProgress(0);
+      return;
+    }
+
+    const now = Date.now();
+    const oldestPlant = Math.min(...field.plantedTimestamps);
+    const timeElapsed = now - oldestPlant;
+    const totalTime = field.assignedCrop.growTime * 1000;
+    const progress = Math.min((timeElapsed / totalTime) * 100, 100);
+
+    setGrowthProgress(progress);
+  }, [field.plantedTimestamps, field.assignedCrop.growTime]);
 
   function handleHarvest(fieldID: number) {
     harvestCrops(fieldID);
   }
 
   async function handlePlanting(fieldID: number, crops = 1) {
-    setTimeout(() => {}, 500);
     const cost = field.assignedCrop.value.buy.finalPrice;
     const pocket = field.assignedCrop.value.buy.currency;
 
-    if (wallet.money === -500 || wallet.money - cost < -500) return;
+    if (wallet.money - cost < -500) return;
 
     modifyWallet(pocket, crops * cost, ScoreOperation.minus);
     plantCrop(fieldID, crops);
   }
 
+  const isFull = useMemo(() => {
+    return (
+      field.amount.planted + field.amount.sprouted === field.amount.capacity
+    );
+  }, [field.amount.planted, field.amount.sprouted, field.amount.capacity]);
+
+  const isEmpty = useMemo(() => {
+    return field.amount.planted + field.amount.sprouted === 0;
+  }, [field.amount.planted, field.amount.sprouted]);
+
   return (
     <div className='card card-md shadow-md bg-gray-100 flex flex-col justify-center align-middle text-center'>
-      <p>{field.name}</p>
-      <p>
-        {field.amount.planted} / {field.amount.capacity}
-      </p>
-      <PlotButton
-        text='Plant'
-        clickFn={() => handlePlanting(field.id)}
-        disableIf={field.amount.planted === field.amount.capacity}
-      />
-      <PlotButton text='Harvest' clickFn={() => handleHarvest(field.id)} />
+      <p className='text-xl font-bold'>{field.name}</p>
+      <div className='divider divider-start mt-0 mb-0 bg-black h-px w-8/12 self-center'></div>
+      <p className='text-md'>{field.assignedCrop.name}</p>
+
+      <div className='grid grid-cols-2 grid-rows-2 h-9/12'>
+        <p>
+          <span className='font-bold'>Growing</span>
+          <br />
+          {field.amount.planted}
+        </p>
+        <p>
+          <span className='font-bold'>Sprouted</span>
+          <br />
+          {field.amount.sprouted}
+        </p>
+        <p className='row-start-2 row-end-3 col-start-1 col-end-3 flex flex-col -mt-2 p-0'>
+          <div className='divider divider-start bg-gray-400 h-px w-6/12 self-center -mb-0.5'></div>
+          <span className='text-gray-400 text-sm'>{field.amount.capacity}</span>
+        </p>
+      </div>
+
+      {/* TODO: Add a loading bar around here.*/}
+
+      <div className='flex flex-row justify-evenly m-2 -mt-2 gap-2'>
+        <PlotButton
+          text='Plant'
+          clickFn={() => handlePlanting(field.id)}
+          disableIf={isFull}
+        />
+        <PlotButton
+          text='Harvest'
+          clickFn={() => handleHarvest(field.id)}
+          disableIf={isEmpty}
+        />
+      </div>
     </div>
   );
 }
@@ -60,7 +110,7 @@ function PlotButton({ text, clickFn, disableIf }: PlotButtonProps) {
   return (
     <>
       <button
-        className='btn bg-gray-300 border-0 p-1 m-2 w-3/6 self-center cursor-pointer'
+        className='btn bg-gray-300 border-0 flex-1 h-auto pt-1 pb-1 self-center cursor-pointer'
         onClick={clickFn}
         disabled={disableIf}
       >
