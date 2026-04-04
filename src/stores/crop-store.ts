@@ -20,6 +20,7 @@ interface CropStore {
   addField: (name: string, capacity: number, crop: CropType) => ActiveCropField;
   plantCrop: (plantID: number, crops: number) => void;
   harvestCrops: (plotID: number) => void;
+  updateGrowth: () => void;
 }
 
 export const useCropStore = create<CropStore>()(
@@ -65,36 +66,74 @@ export const useCropStore = create<CropStore>()(
         // console.log(activeField);
         return activeField;
       },
-
       plantCrop: (plotID: number, crops: number) => {
         const target = get().targetField(plotID);
         if (target[0] === -1) return;
 
-        const futureValue = target[1].amount.planted + crops;
+        const currentPlanted = target[1].amount.planted;
+        const availableSpace = target[1].amount.capacity - currentPlanted;
+        const plantAmount = Math.min(crops, availableSpace);
+
+        if (plantAmount <= 0) return;
+
+        const now = Date.now();
 
         set((state) => {
-          state.fields[target[0]].amount.planted = Math.min(
-            futureValue,
-            target[1].amount.capacity,
-          );
+          if (!state.fields[target[0]].plantedTimestamps) {
+            state.fields[target[0]].plantedTimestamps = [];
+          }
+
+          for (let i = 0; i < plantAmount; i++) {
+            state.fields[target[0]].plantedTimestamps.push(now);
+          }
+
+          state.fields[target[0]].amount.planted += plantAmount;
         });
       },
-
       harvestCrops: (plotID: number) => {
         const target = get().targetField(plotID);
 
         if (target[0] === -1) return;
 
-        if (target[1].amount.planted === 0) return;
+        const sproutedAmount = target[1].amount.sprouted;
+        if (sproutedAmount === 0) return;
 
         const crop = target[1].assignedCrop;
-        const amount = target[1].amount.planted;
 
         set((state) => {
-          state.fields[target[0]].amount.planted = 0;
+          state.fields[target[0]].amount.sprouted = 0;
         });
 
-        usePlayerStore.getState().addToInventory({ ...crop, amount }, amount);
+        usePlayerStore
+          .getState()
+          .addToInventory({ ...crop, amount: sproutedAmount }, sproutedAmount);
+      },
+      updateGrowth: () => {
+        const now = Date.now();
+        set((state) => {
+          state.fields.forEach((field) => {
+            const { plantedTimestamps, assignedCrop } = field;
+
+            if (!plantedTimestamps) return;
+
+            const readyIndices: number[] = [];
+
+            plantedTimestamps.forEach((timestamp, index) => {
+              if (now - timestamp >= assignedCrop.growTime * 1000) {
+                readyIndices.push(index);
+              }
+            });
+
+            if (readyIndices.length > 0) {
+              field.amount.sprouted += readyIndices.length;
+              field.amount.planted -= readyIndices.length;
+
+              field.plantedTimestamps = plantedTimestamps.filter(
+                (_, index) => !readyIndices.includes(index),
+              );
+            }
+          });
+        });
       },
     })),
     {
