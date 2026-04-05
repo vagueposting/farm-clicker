@@ -4,6 +4,7 @@ import type {
   Inventory,
 } from "../logic/types-and-templates/game-operations";
 import { usePlayerStore } from "../stores/player-store";
+import { useStatModalStore } from "../stores/player-info-modal";
 
 interface InventoryProps {
   extraClasses?: string;
@@ -20,6 +21,7 @@ interface SellProps {
 
 export function Inventory({ extraClasses = "" }: InventoryProps) {
   const { inventory } = usePlayerStore();
+
   const classList = cn(
     extraClasses,
     "bg-gray-200",
@@ -63,9 +65,13 @@ function ItemDiv({ item }: ItemProps) {
 
 function SellItem({ quantity, item }: SellProps) {
   const { sellItem } = usePlayerStore();
+  const { modalFolded, autoOpenOnSell, flipModal } = useStatModalStore();
 
   function handleSell() {
     sellItem(item, quantity);
+    if (modalFolded && autoOpenOnSell) {
+      flipModal();
+    }
   }
 
   return (

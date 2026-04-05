@@ -83,10 +83,10 @@ export function CropPlot({ field }: CropPlotProps) {
           <br />
           {field.amount.sprouted}
         </p>
-        <p className='row-start-2 row-end-3 col-start-1 col-end-3 flex flex-col -mt-2 p-0'>
+        <div className='row-start-2 row-end-3 col-start-1 col-end-3 flex flex-col -mt-2 p-0'>
           <div className='divider divider-start bg-gray-400 h-px w-6/12 self-center -mb-0.5'></div>
           <span className='text-gray-400 text-sm'>{field.amount.capacity}</span>
-        </p>
+        </div>
       </div>
 
       {/* TODO: Add a loading bar around here.*/}
@@ -141,7 +141,7 @@ function PlotName({ field }: PlotNameProps) {
           }}
         >
           <input
-            className='bg-white p-1 text-lg font-bold text-center rounded border border-black shadow-inner outline-black'
+            className='bg-white p-1 mt-2 text-lg font-bold text-center rounded border border-black shadow-inner outline-black'
             type='text'
             name='fieldName'
             defaultValue={field.name}
