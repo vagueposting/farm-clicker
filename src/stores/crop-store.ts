@@ -18,6 +18,7 @@ interface CropStore {
   getID: () => number;
   targetField: (plotID: number) => [number, ActiveCropField];
   addField: (name: string, capacity: number, crop: CropType) => ActiveCropField;
+  renameField: (plotID: number, name: string) => void;
   plantCrop: (plantID: number, crops: number) => void;
   harvestCrops: (plotID: number) => void;
   updateGrowth: () => void;
@@ -65,6 +66,15 @@ export const useCropStore = create<CropStore>()(
         });
         // console.log(activeField);
         return activeField;
+      },
+      renameField: (plotID: number, newName: string) => {
+        const target = get().targetField(plotID);
+
+        set((state) => {
+          if (!state.fields[target[0]]) return;
+
+          state.fields[target[0]].name = newName;
+        });
       },
       plantCrop: (plotID: number, crops: number) => {
         const target = get().targetField(plotID);

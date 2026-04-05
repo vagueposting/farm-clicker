@@ -1,11 +1,15 @@
 import { ScoreOperation } from "../logic/types-and-templates/game-operations";
 import { ActiveCropField, useCropStore } from "../stores/crop-store";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, use } from "react";
 import { usePlayerStore } from "../stores/player-store";
 import { useGrowthLoop } from "../hooks/useGrowthLoop";
 
 // TODO: Implement "wait to grow" cycle
 // TODO: implement being able to plan 1/5/10/max
+
+interface PlotNameProps {
+  field: ActiveCropField;
+}
 
 interface PlotButtonProps {
   text: string;
@@ -67,10 +71,7 @@ export function CropPlot({ field }: CropPlotProps) {
 
   return (
     <div className='card card-md shadow-md bg-gray-100 flex flex-col justify-center align-middle text-center'>
-      <p className='text-xl font-bold'>{field.name}</p>
-      <div className='divider divider-start mt-0 mb-0 bg-black h-px w-8/12 self-center'></div>
-      <p className='text-md'>{field.assignedCrop.name}</p>
-
+      <PlotName field={field} />
       <div className='grid grid-cols-2 grid-rows-2 h-9/12'>
         <p>
           <span className='font-bold'>Growing</span>
@@ -103,6 +104,58 @@ export function CropPlot({ field }: CropPlotProps) {
         />
       </div>
     </div>
+  );
+}
+
+function PlotName({ field }: PlotNameProps) {
+  const { renameField } = useCropStore();
+  const [isInputField, setInputFieldState] = useState(false);
+
+  function changeInput() {
+    setInputFieldState(!isInputField);
+  }
+
+  function handleNameChange(fieldID: number, newName: string) {
+    renameField(fieldID, newName);
+  }
+
+  return (
+    <>
+      {!isInputField && (
+        <>
+          <p className='text-xl font-bold' onDoubleClick={changeInput}>
+            {field.name}
+          </p>
+          <div className='divider divider-start mt-0 mb-0 bg-black h-px w-8/12 self-center'></div>
+          <p className='text-md'>{field.assignedCrop.name}</p>
+        </>
+      )}
+      {isInputField && (
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            const formData = new FormData(e.currentTarget);
+            const newName = formData.get("fieldName") as string;
+            handleNameChange(field.id, newName);
+            changeInput();
+          }}
+        >
+          <input
+            className='bg-white p-1 text-lg font-bold text-center rounded border border-black shadow-inner outline-black'
+            type='text'
+            name='fieldName'
+            defaultValue={field.name}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                e.currentTarget.form?.requestSubmit();
+              }
+            }}
+            autoFocus
+          />
+        </form>
+      )}
+    </>
   );
 }
 
