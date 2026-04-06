@@ -68,7 +68,7 @@ export function CropPlot({ field }: CropPlotProps) {
   }, [field.amount.planted, field.amount.sprouted]);
 
   return (
-    <div className='card card-md shadow-md bg-gray-100 flex flex-col justify-center align-middle text-center'>
+    <div className='card card-md shadow-md bg-gray-100 rounded flex flex-col justify-center align-middle text-center'>
       <PlotName field={field} />
       <div className='grid grid-cols-3 grid-rows-2 h-9/12'>
         <p>
@@ -166,7 +166,7 @@ function PlotButton({ text, clickFn, disableIf }: PlotButtonProps) {
   return (
     <>
       <button
-        className='btn bg-gray-300 border-0 flex-1 h-auto pt-1 pb-1 self-center cursor-pointer'
+        className='btn bg-gray-300 rounded border-0 flex-1 h-auto pt-1 pb-1 self-center cursor-pointer'
         onClick={clickFn}
         disabled={disableIf}
       >

@@ -45,7 +45,7 @@ export function Inventory({ extraClasses = "" }: InventoryProps) {
 
 function ItemDiv({ item }: ItemProps) {
   return (
-    <div className='flex flex-col p-2 bg-gray-50 shadow-inner'>
+    <div className='flex flex-col p-2 bg-gray-50 shadow-inner rounded'>
       <div className='flex justify-left items-center gap-1'>
         <span className='font-bold text-md'>{item.name}</span> - {item.amount}
       </div>
@@ -78,7 +78,7 @@ function SellItem({ quantity, item }: SellProps) {
 
   return (
     <button
-      className='btn flex-1 bg-gray-300 border-0 p-1 w-auto self-center'
+      className='btn rounded flex-1 bg-gray-300 border-0 p-1 w-auto self-center'
       onClick={handleSell}
       disabled={item.amount === 0}
     >
