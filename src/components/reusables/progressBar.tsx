@@ -1,11 +1,17 @@
 import { useState, useEffect, useMemo } from "react";
+import { cn } from "../../utils/cn";
 
 interface ProgressBarProps {
   timestamps: number[];
   maxTime: number; // in seconds
+  direction?: "RL" | "LR";
 }
 
-export function ProgressBar({ timestamps, maxTime }: ProgressBarProps) {
+export function ProgressBar({
+  timestamps,
+  maxTime,
+  direction = "LR",
+}: ProgressBarProps) {
   const [now, setNow] = useState(Date.now());
 
   useEffect(() => {
@@ -13,25 +19,28 @@ export function ProgressBar({ timestamps, maxTime }: ProgressBarProps) {
     return () => clearInterval(interval);
   }, []);
 
-  const { progress, timeRemaining, isGrowing } = useMemo(() => {
+  const { progress, displayProgress, timeRemaining } = useMemo(() => {
     if (!timestamps.length) {
-      return { progress: 0, timeRemaining: null, isGrowing: false };
+      return { progress: 0, displayProgress: 0, timeRemaining: null };
     }
 
-    const oldestPlant = Math.min(...timestamps);
+    const oldestTimestamp = Math.min(...timestamps);
     const totalTime = maxTime * 1000;
-    const elapsed = now - oldestPlant;
-    const progress = Math.min((elapsed / totalTime) * 100, 100);
+    const elapsed = now - oldestTimestamp;
+    const rawProgress = Math.min((elapsed / totalTime) * 100, 100);
     const remaining = Math.max(0, totalTime - elapsed);
 
-    return {
-      progress,
-      timeRemaining: remaining,
-      isGrowing: progress < 100 && progress > 0,
-    };
-  }, [timestamps, maxTime, now]);
+    const displayProgress =
+      direction === "RL" ? 100 - rawProgress : rawProgress;
 
-  const formatTimeRemaining = (ms: number): string => {
+    return {
+      progress: rawProgress,
+      displayProgress,
+      timeRemaining: remaining,
+    };
+  }, [timestamps, maxTime, now, direction]);
+
+  function formatTimeRemaining(ms: number): string {
     if (ms <= 0) return "Ready to harvest! 🌾";
     const seconds = Math.floor(ms / 1000);
     const minutes = Math.floor(seconds / 60);
@@ -40,14 +49,38 @@ export function ProgressBar({ timestamps, maxTime }: ProgressBarProps) {
     if (hours > 0) return `${hours}h ${minutes % 60}m remaining`;
     if (minutes > 0) return `${minutes}m ${seconds % 60}s remaining`;
     return `${seconds}s remaining`;
-  };
+  }
+
+  // TODO: implement size styling
+  function progressStyle(
+    direction: "LR" | "RL" | "CUSTOM",
+    customColor?: string,
+  ): string {
+    let backgroundStyle;
+
+    if (direction === "RL") {
+      backgroundStyle = "from-red-400 via-amber-400 to-orange-400";
+    } else if (direction === "LR") {
+      backgroundStyle = "from-lime-400 via-green-300 to-teal-300";
+    } else {
+      backgroundStyle = customColor;
+    }
+
+    return cn(
+      "h-full transition-all duration-300 shadow-inner ease-out rounded-md",
+      "bg-gradient-to-r",
+      backgroundStyle,
+    );
+  }
 
   return (
-    <div className='relative w-full group'>
-      <div className='w-full bg-zinc-50 rounded-md overflow-hidden h-4'>
+    <div className='flex flex-col justify-center align-center relative w-full group'>
+      <div className='w-full h-1/3 bg-white shadow-inner rounded-md overflow-hidden'>
         <div
-          className='bg-lime-400 h-full transition-all duration-300 ease-out rounded-md'
-          style={{ width: `${progress}%` }}
+          className={(() => progressStyle(direction))()}
+          style={{
+            width: `${displayProgress}%`,
+          }}
         />
       </div>
 
@@ -58,9 +91,7 @@ export function ProgressBar({ timestamps, maxTime }: ProgressBarProps) {
                       bg-black text-white text-xs rounded opacity-0 group-hover:opacity-100 
                       transition-opacity pointer-events-none whitespace-nowrap z-10'
         >
-          {progress >= 100
-            ? "🌾 Ready to harvest!"
-            : `🌱 ${formatTimeRemaining(timeRemaining!)}`}
+          <span>{`🌱 ${formatTimeRemaining(timeRemaining!)}`}</span>
           <div
             className='absolute top-full left-1/2 -translate-x-1/2 
                         border-4 border-transparent border-t-black'
