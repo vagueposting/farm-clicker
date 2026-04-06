@@ -5,12 +5,17 @@ interface ProgressBarProps {
   timestamps: number[];
   maxTime: number; // in seconds
   direction?: "RL" | "LR";
+  customColor?: {
+    apply: boolean;
+    color?: string;
+  };
 }
 
 export function ProgressBar({
   timestamps,
   maxTime,
   direction = "LR",
+  customColor,
 }: ProgressBarProps) {
   const [now, setNow] = useState(Date.now());
 
@@ -53,14 +58,15 @@ export function ProgressBar({
 
   // TODO: implement size styling
   function progressStyle(
-    direction: "LR" | "RL" | "CUSTOM",
+    direction: "LR" | "RL",
+    defaultColor: boolean = true,
     customColor?: string,
   ): string {
     let backgroundStyle;
 
-    if (direction === "RL") {
+    if (defaultColor && direction == "RL") {
       backgroundStyle = "from-red-400 via-amber-400 to-orange-400";
-    } else if (direction === "LR") {
+    } else if (defaultColor && direction === "LR") {
       backgroundStyle = "from-lime-400 via-green-300 to-teal-300";
     } else {
       backgroundStyle = customColor;
@@ -77,7 +83,12 @@ export function ProgressBar({
     <div className='flex flex-col justify-center align-center relative w-full group'>
       <div className='w-full h-1/3 bg-white shadow-inner rounded-md overflow-hidden'>
         <div
-          className={(() => progressStyle(direction))()}
+          className={(() =>
+            progressStyle(
+              direction,
+              !customColor?.apply,
+              customColor?.color,
+            ))()}
           style={{
             width: `${displayProgress}%`,
           }}
