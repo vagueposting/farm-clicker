@@ -3,8 +3,8 @@ import { ActiveCropField, useCropStore } from "../stores/crop-store";
 import { useEffect, useState, useMemo } from "react";
 import { usePlayerStore } from "../stores/player-store";
 import { useGrowthLoop } from "../hooks/useGrowthLoop";
+import { ProgressBar } from "./reusables/progressBar";
 
-// TODO: Implement "wait to grow" cycle
 // TODO: implement being able to plan 1/5/10/max
 
 interface PlotNameProps {
@@ -76,18 +76,18 @@ export function CropPlot({ field }: CropPlotProps) {
           <br />
           {field.amount.planted}
         </p>
-        {/* loading bar */}
-        <div className='w-full h-4 m-auto justify-self-center align-middle bg-zinc-50 rounded-md overflow-hidden'>
-          <div
-            className='bg-lime-400 h-full transition-all duration-300 ease-out rounded-md'
-            style={{ width: `${growthProgress}%` }}
-          />
-        </div>
+
+        <ProgressBar
+          timestamps={field.plantedTimestamps}
+          maxTime={field.assignedCrop.growTime}
+        />
+
         <p>
           <span className='font-bold'>Sprouted</span>
           <br />
           {field.amount.sprouted}
         </p>
+
         <div className='row-start-2 row-end-3 col-start-1 col-end-4 flex flex-col -mt-2 p-0'>
           <div className='divider divider-start bg-gray-400 h-px w-6/12 self-center -mb-0.5'></div>
           <span className='text-gray-400 text-sm'>{field.amount.capacity}</span>

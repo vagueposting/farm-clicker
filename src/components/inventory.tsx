@@ -58,7 +58,9 @@ function ItemDiv({ item }: ItemProps) {
       >
         {item.description}
       </p>
-      <SellItem quantity={1} item={item} />
+      <div className='flex'>
+        <SellItem quantity={1} item={item} />
+      </div>
     </div>
   );
 }
@@ -76,11 +78,11 @@ function SellItem({ quantity, item }: SellProps) {
 
   return (
     <button
-      className='btn btn-sm bg-gray-300 border-0 p-1 w-auto self-center'
+      className='btn flex-1 bg-gray-300 border-0 p-1 w-auto self-center'
       onClick={handleSell}
       disabled={item.amount === 0}
     >
-      Sell ({quantity})
+      Sell [<span className='text-gray-700'>{quantity}</span>]
     </button>
   );
 }
