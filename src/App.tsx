@@ -25,7 +25,7 @@ export default function App() {
       {isMounted && <PlayerStats dragConstraints={statConstraintsRef} />}
       <Sidebar>
         <details>
-          <summary className='sidebarAccordion font-bold font-mono text-lg cursor-pointer select-none'>
+          <summary className='sidebarAccordion font-bold font-mono text-lg cursor-pointer select-none bg-gray-100 shadow-sm rounded'>
             Inventory
           </summary>
           <Inventory />

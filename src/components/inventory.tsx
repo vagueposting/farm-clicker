@@ -3,13 +3,8 @@ import type {
   StoredItem,
   Inventory,
 } from "../logic/types-and-templates/game-operations";
-import { MenuShape } from "../logic/types-and-templates/menu-types";
 import { usePlayerStore } from "../stores/player-store";
 import { useStatModalStore } from "../stores/player-info-modal";
-
-interface InventoryProps {
-  form: MenuShape;
-}
 
 interface InventoryListingProps {
   extraClasses?: string;
