@@ -1,0 +1,33 @@
+.sidebarAccordion::-webkit-details-marker {
+  display: none;
+}
+
+.sidebarAccordion {
+  display: flex;
+  align-items: center;
+  list-style: none;
+}
+
+.sidebarAccordion::before {
+  font-family: "Material Icons Round";
+  content: "arrow_right";
+  margin-right: 8px;
+  font-size: 1rem;
+  transform: scale(215%);
+  transition: transform 0.5s ease;
+}
+
+details[open] .sidebarAccordion::before {
+  transform: rotate(90deg) scale(215%);
+}
+
+details::details-content {
+  transition:
+    opacity 0.5s,
+    display 0.5s allow-discrete;
+  opacity: 0;
+}
+
+details[open]::details-content {
+  opacity: 1;
+}

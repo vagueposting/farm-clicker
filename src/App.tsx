@@ -1,4 +1,7 @@
+//@ts-ignore
 import "./App.css";
+//@ts-ignore
+import "material-icons/iconfont/round.css";
 import { init } from "./utils/init";
 import { CropPlot } from "./components/cropPlot";
 import { Container } from "./components/container";
@@ -7,7 +10,6 @@ import { PlayerStats } from "./components/playerStats";
 import { useEffect, useRef, useState } from "react";
 import { useCropStore } from "./stores/crop-store";
 import { Sidebar } from "./components/sidebar";
-import "material-icons/iconfont/round.css";
 
 export default function App() {
   const statConstraintsRef = useRef(null);
@@ -22,7 +24,12 @@ export default function App() {
     <Container ref={statConstraintsRef}>
       {isMounted && <PlayerStats dragConstraints={statConstraintsRef} />}
       <Sidebar>
-        <Inventory />
+        <details>
+          <summary className='sidebarAccordion font-bold font-mono text-lg cursor-pointer select-none'>
+            Inventory
+          </summary>
+          <Inventory />
+        </details>
       </Sidebar>
       <FieldsList />
     </Container>

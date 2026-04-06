@@ -3,10 +3,15 @@ import type {
   StoredItem,
   Inventory,
 } from "../logic/types-and-templates/game-operations";
+import { MenuShape } from "../logic/types-and-templates/menu-types";
 import { usePlayerStore } from "../stores/player-store";
 import { useStatModalStore } from "../stores/player-info-modal";
 
 interface InventoryProps {
+  form: MenuShape;
+}
+
+interface InventoryListingProps {
   extraClasses?: string;
 }
 
@@ -19,7 +24,7 @@ interface SellProps {
   item: StoredItem;
 }
 
-export function Inventory({ extraClasses = "" }: InventoryProps) {
+export function Inventory({ extraClasses = "" }: InventoryListingProps) {
   const { inventory } = usePlayerStore();
 
   const classList = cn(
@@ -33,9 +38,6 @@ export function Inventory({ extraClasses = "" }: InventoryProps) {
 
   return (
     <div className={classList}>
-      <h1 className='text-xl'>
-        <b className='font-mono text-lg'>Inventory</b>
-      </h1>
       {processedInv.map((item) => (
         <ItemDiv key={item.id} item={item} />
       ))}
