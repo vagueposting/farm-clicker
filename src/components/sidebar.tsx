@@ -54,8 +54,12 @@ export function Sidebar({ children }: SidebarProps) {
         >
           <span className='material-icons-round text-white'>close</span>
         </label>
-        <div className='relative xl:-top-2 lg:top-1 md:top-6 sm:top-7'>
-          {children}
+        <div className='relative xl:-top-2 lg:top-1 md:top-6 sm:top-7 flex flex-col justify-between h-full'>
+          <div>{children}</div>
+          <div>
+            <div className='divider bg-black h-px mb-0'></div>
+            <p>Test</p>
+          </div>
         </div>
       </div>
     </>

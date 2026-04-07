@@ -29,11 +29,10 @@ export function CropPlot({ field }: CropPlotProps) {
   useGrowthLoop();
 
   useEffect(() => {
-    const interval = setInterval(() => setNow(Date.now()), 100); // 100ms = smooth
+    const interval = setInterval(() => setNow(Date.now()), 100);
     return () => clearInterval(interval);
   }, []);
 
-  // Remove the old useEffect, replace with useMemo that depends on `now`
   const growthProgress = useMemo(() => {
     if (!field.plantedTimestamps || field.plantedTimestamps.length === 0)
       return 0;
