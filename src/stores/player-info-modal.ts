@@ -6,7 +6,7 @@ import { createJSONStorage, persist } from "zustand/middleware";
 // Done externally to playerStats.tsx so other features
 // Can toggle it or not.
 
-type ModalSettings = "toggleOnStartup" | "toggleOnSell";
+export type ModalSettings = "toggleOnStartup" | "toggleOnSell";
 
 interface ModalStore {
   modalFolded: boolean;

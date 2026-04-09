@@ -1,16 +1,28 @@
 import { useStatModalStore } from "../stores/player-info-modal";
+import type { ModalSettings } from "../stores/player-info-modal";
 
 interface SettingToggleProps {
   reference: boolean;
   setting: string;
-  toggleFn: (setting: string) => void;
+  toggleFn: (setting: any) => void;
 }
 
 export function SettingsMenu() {
   // Call all settings
-  const { toggleModalSettings } = useStatModalStore();
+  const { autoOpenOnSell, autoOpenOnStartup, toggleModalSettings } =
+    useStatModalStore();
 
-  return <></>;
+  return (
+    <>
+      <dialog id='settings'>
+        <SettingToggle
+          reference={autoOpenOnStartup}
+          setting='toggleOnStartup'
+          toggleFn={toggleModalSettings}
+        />
+      </dialog>
+    </>
+  );
 }
 
 function SettingToggle({ reference, setting, toggleFn }: SettingToggleProps) {
