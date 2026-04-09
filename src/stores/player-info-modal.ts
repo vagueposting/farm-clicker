@@ -6,11 +6,14 @@ import { createJSONStorage, persist } from "zustand/middleware";
 // Done externally to playerStats.tsx so other features
 // Can toggle it or not.
 
+type ModalSettings = "toggleOnStartup" | "toggleOnSell";
+
 interface ModalStore {
   modalFolded: boolean;
   autoOpenOnStartup: boolean;
   autoOpenOnSell: boolean;
   flipModal: () => void;
+  toggleModalSettings: (setting: ModalSettings) => void;
 }
 
 export const useStatModalStore = create<ModalStore>()(
@@ -23,6 +26,24 @@ export const useStatModalStore = create<ModalStore>()(
         set((state) => {
           state.modalFolded = !state.modalFolded;
         });
+      },
+      toggleModalSettings: (setting) => {
+        switch (setting) {
+          case "toggleOnSell":
+            set((state) => {
+              state.autoOpenOnSell = !state.autoOpenOnSell;
+            });
+            break;
+          case "toggleOnStartup":
+            set((state) => {
+              state.autoOpenOnStartup = !state.autoOpenOnStartup;
+            });
+            break;
+          default:
+            throw new Error(
+              `toggleModalSettings() - The setting being called (${setting}) is not valid.`,
+            );
+        }
       },
     })),
     {
