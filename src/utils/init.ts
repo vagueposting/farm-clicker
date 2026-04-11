@@ -2,6 +2,7 @@ import { useCropStore } from "../stores/crop-store";
 import { CropType } from "../logic/crops";
 import cropData from "../data/crops.json";
 import { enableMapSet } from "immer";
+import { useStatModalStore } from "../stores/player-info-modal";
 
 let initialized = false;
 
@@ -23,6 +24,15 @@ export function init() {
     // create the first field using addField()
     // if there is no crop save data
     useCropStore.getState().addField("My first field", 20, crops[0]);
+  }
+
+  if (localStorage.getItem("player-modal-data")) {
+    const { modalFolded, autoOpenOnStartup, flipModal } =
+      useStatModalStore.getState();
+
+    if (modalFolded && autoOpenOnStartup) {
+      flipModal();
+    }
   }
 
   initialized = true;

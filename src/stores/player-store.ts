@@ -130,18 +130,9 @@ export const usePlayerStore = create<PlayerStore>()(
       name: "player-data",
       storage: createJSONStorage(() => localStorage),
       onRehydrateStorage: () => (state: PlayerStore | undefined) => {
-        /* console.log("⏱️ onRehydrateStorage FIRED at:", Date.now());
-        console.log("RAW rehydrated state:", JSON.stringify(state?.wallet));
-        console.log("RAW wallet.money type:", typeof state?.wallet?.money);
-        console.log(
-          "RAW wallet.diamonds type:",
-          typeof state?.wallet?.diamonds,
-        ); */
         if (state) {
           for (const key in state.inventory) {
             const raw = state.inventory[key];
-            // raw.value.buy/sell are plain objects with baseValue, modifiers, currency
-            // We need to reconstruct PriceHandling instances from them
             const revivedItem = {
               ...raw,
               value: reviveStoredItem(raw).value,
@@ -149,10 +140,6 @@ export const usePlayerStore = create<PlayerStore>()(
             state.inventory[key] = revivedItem;
           }
           rehydratePlayer(state);
-          /* console.log(
-            "Player.wallet AFTER rehydratePlayer:",
-            JSON.stringify(Player.wallet),
-          ); */
         }
       },
     },

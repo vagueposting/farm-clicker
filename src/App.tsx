@@ -10,6 +10,10 @@ import { PlayerStats } from "./components/playerStats";
 import { useEffect, useRef, useState } from "react";
 import { useCropStore } from "./stores/crop-store";
 import { Sidebar } from "./components/sidebar";
+import { SettingsMenu } from "./components/settings";
+
+// Store imports
+import { useStatModalStore } from "./stores/player-info-modal";
 
 export default function App() {
   const statConstraintsRef = useRef(null);
@@ -21,18 +25,21 @@ export default function App() {
   }, []);
 
   return (
-    <Container ref={statConstraintsRef}>
-      {isMounted && <PlayerStats dragConstraints={statConstraintsRef} />}
-      <Sidebar>
-        <details>
-          <summary className='sidebarAccordion font-bold font-mono text-lg cursor-pointer select-none bg-gray-100 shadow-sm rounded'>
-            Inventory
-          </summary>
-          <Inventory />
-        </details>
-      </Sidebar>
-      <FieldsList />
-    </Container>
+    <>
+      <Container ref={statConstraintsRef}>
+        {isMounted && <PlayerStats dragConstraints={statConstraintsRef} />}
+        <Sidebar>
+          <details>
+            <summary className='sidebarAccordion font-bold font-mono text-lg cursor-pointer select-none bg-gray-100 shadow-sm rounded'>
+              Inventory
+            </summary>
+            <Inventory />
+          </details>
+        </Sidebar>
+        <SettingsMenu />
+        <FieldsList />
+      </Container>
+    </>
   );
 }
 

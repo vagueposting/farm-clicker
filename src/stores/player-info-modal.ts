@@ -49,7 +49,11 @@ export const useStatModalStore = create<ModalStore>()(
     {
       name: "player-modal-data",
       storage: createJSONStorage(() => localStorage),
-      // TODO: implement these into a settings feature
+      onRehydrateStorage: () => (state: ModalStore | undefined) => {
+        if (state) {
+          state.modalFolded = true;
+        }
+      },
     },
   ),
 );

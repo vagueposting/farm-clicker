@@ -1,0 +1,10 @@
+input.settingToggle {
+  border: solid 1.5px black;
+}
+
+input.settingToggle::before {
+  transform: scale(115%);
+  border-radius: 2px;
+  background-color: rgb(243, 244, 246);
+  border: solid 1.5px black;
+}

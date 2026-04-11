@@ -63,9 +63,10 @@ export function Sidebar({ children }: SidebarProps) {
             <div className='divider bg-black h-px mb-0'></div>
             <SidebarControls
               icon='settings'
-              clickFn={() => {
-                console.log("Clicked on settings button.");
-              }}
+              clickFn={() =>
+                // @ts-ignore
+                document.getElementById("settings").showModal()
+              }
               extraClasses='relative mt-2 rounded'
               color={{
                 icon: "white",
