@@ -19,7 +19,7 @@ export function PlayerStats({ dragConstraints }: PlayerStatProps) {
   // Ensure 'top-0 left-0' is set so the element's origin
   // matches the Container's origin exactly.
   const boxClass = cn(
-    "absolute top-0 right-0 m-4 shadow-lg z-10 w-40 cursor-move",
+    "absolute top-0 right-0 m-4 shadow-lg z-10 w-40 cursor-move rounded-tr-md",
     modalFolded ? "bg-gray-400" : "bg-white h-auto",
   );
 
@@ -47,7 +47,7 @@ export function PlayerStats({ dragConstraints }: PlayerStatProps) {
       </div>
 
       {!modalFolded && (
-        <div className='p-1 text-black bg-white'>
+        <div className='p-1 text-black bg-white' C>
           <p className='flex justify-between align-middle'>
             <span className='font-bold'>Money</span> ${wallet.money}
           </p>

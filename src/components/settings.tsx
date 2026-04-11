@@ -19,36 +19,45 @@ export function SettingsMenu() {
     useStatModalStore();
 
   return (
-    <dialog id='settings' className='modal'>
-      <div className='modal-box bg-white'>
-        <h3 className='font-bold text-lg mb-4'>Settings</h3>
+    <dialog id='settings' className='modal z-20'>
+      <div className='modal-box flex flex-col bg-white rounded shadow-lg gap-2'>
+        <h2 className='font-bold text-2xl mb-2'>Settings</h2>
+        <div className='divider bg-black h-px -mt-2 -mb-1'></div>
+        <div
+          id='allSetting'
+          className='flex flex-col gap-3 h-80 overflow-y-auto'
+        >
+          <h3 className='font-bold text-lg'>Appearance</h3>
+          <Setting
+            title='Open modal on startup'
+            description='The player info modal immediately opens upon startup.'
+            setting={
+              <SettingToggle
+                reference={autoOpenOnStartup}
+                setting='toggleOnStartup'
+                toggleFn={toggleModalSettings}
+              />
+            }
+          />
 
-        <Setting
-          title='Open modal on startup'
-          description='This is a test description to check for styling'
-          setting={
-            <SettingToggle
-              reference={autoOpenOnStartup}
-              setting='toggleOnStartup'
-              toggleFn={toggleModalSettings}
-            />
-          }
-        />
-
-        <Setting
-          title='Open modal on sell'
-          setting={
-            <SettingToggle
-              reference={autoOpenOnSell}
-              setting='toggleOnSell'
-              toggleFn={toggleModalSettings}
-            />
-          }
-        />
+          <Setting
+            title='Open modal on sell'
+            description='The player info modal automatically opens when you sell an item.'
+            setting={
+              <SettingToggle
+                reference={autoOpenOnSell}
+                setting='toggleOnSell'
+                toggleFn={toggleModalSettings}
+              />
+            }
+          />
+        </div>
 
         <div className='modal-action'>
           <form method='dialog'>
-            <button className='btn'>Close</button>
+            <button className='btn bg-gray-300 border-0 rounded h-auto py-1'>
+              Close
+            </button>
           </form>
         </div>
       </div>
@@ -62,12 +71,14 @@ export function SettingsMenu() {
 
 function Setting({ title, description, setting }: SettingProps) {
   return (
-    <div className='grid grid-rows-2 grid-cols-5'>
+    <div className='grid grid-cols-5'>
       <div className='flex flex-col col-start-1 col-end-5'>
         <div className='font-bold text-sm'>{title}</div>
         <div className='text-xs'>{description}</div>
       </div>
-      <div className='col-start-5 col-end-6'>{setting}</div>
+      <div className='col-start-5 col-end-6 justify-self-center self-center'>
+        {setting}
+      </div>
     </div>
   );
 }
