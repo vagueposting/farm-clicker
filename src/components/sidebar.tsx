@@ -32,6 +32,7 @@ export function Sidebar({ children }: SidebarProps) {
         icon='menu'
         extraClasses={`lg:hidden absolute top-4 ml-4 z-10 ${!sidebarState ? "hidden" : ""}`}
         clickFn={handleSidebarButton}
+        asLabel={true}
       />
 
       <input
@@ -54,6 +55,7 @@ export function Sidebar({ children }: SidebarProps) {
           icon='close'
           clickFn={handleSidebarButton}
           extraClasses='lg:hidden absolute top-4 right-0 mr-4 z-10'
+          asLabel={true}
         />
         <div className='relative xl:-top-2 lg:top-1 md:top-6 sm:top-7 flex flex-col justify-between h-full'>
           <div>{children}</div>
@@ -63,13 +65,13 @@ export function Sidebar({ children }: SidebarProps) {
               icon='settings'
               clickFn={() => {
                 console.log("Clicked on settings button.");
-                handleSidebarButton();
               }}
               extraClasses='relative mt-2 rounded'
               color={{
                 icon: "white",
                 button: "gray-400",
               }}
+              asLabel={false}
             />
           </div>
         </div>
@@ -86,7 +88,8 @@ function SidebarControls({
     button: "sky-400",
   },
   extraClasses,
-}: SidebarControlProps) {
+  asLabel = false,
+}: SidebarControlProps & { asLabel?: boolean }) {
   const iconClassList = cn("material-icons-round", `text-${color.icon}`);
   const buttonClassList = cn(
     "btn rounded-full border-0 mb-4 w-8 h-8 shadow-md self-end justify-self-end",
@@ -94,9 +97,17 @@ function SidebarControls({
     extraClasses,
   );
 
+  if (asLabel) {
+    return (
+      <label htmlFor='sidebar' className={buttonClassList} onClick={clickFn}>
+        <span className={iconClassList}>{icon}</span>
+      </label>
+    );
+  }
+
   return (
-    <label htmlFor='sidebar' className={buttonClassList} onClick={clickFn}>
+    <button className={buttonClassList} onClick={clickFn}>
       <span className={iconClassList}>{icon}</span>
-    </label>
+    </button>
   );
 }
