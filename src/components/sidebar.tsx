@@ -30,7 +30,7 @@ export function Sidebar({ children }: SidebarProps) {
     <>
       <SidebarControls
         icon='menu'
-        extraClasses={`absolute top-4 ml-4 z-10 ${!sidebarState ? "hidden" : ""}`}
+        extraClasses={`lg:hidden absolute top-4 ml-4 z-10 ${!sidebarState ? "hidden" : ""}`}
         clickFn={handleSidebarButton}
       />
 
@@ -53,14 +53,14 @@ export function Sidebar({ children }: SidebarProps) {
         <SidebarControls
           icon='close'
           clickFn={handleSidebarButton}
-          extraClasses='absolute top-4 right-0 mr-4 z-10'
+          extraClasses='lg:hidden absolute top-4 right-0 mr-4 z-10'
         />
         <div className='relative xl:-top-2 lg:top-1 md:top-6 sm:top-7 flex flex-col justify-between h-full'>
           <div>{children}</div>
           <div>
             <div className='divider bg-black h-px mb-0'></div>
             <SidebarControls
-              icon='close'
+              icon='settings'
               clickFn={() => {
                 console.log("Clicked on settings button.");
                 handleSidebarButton();
@@ -89,7 +89,7 @@ function SidebarControls({
 }: SidebarControlProps) {
   const iconClassList = cn("material-icons-round", `text-${color.icon}`);
   const buttonClassList = cn(
-    "btn lg:hidden rounded-full border-0 mb-4 w-8 h-8 shadow-md self-end justify-self-end",
+    "btn rounded-full border-0 mb-4 w-8 h-8 shadow-md self-end justify-self-end",
     `bg-${color.button}`,
     extraClasses,
   );
