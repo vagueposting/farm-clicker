@@ -117,7 +117,7 @@ export function SettingsMenu() {
   );
 }
 
-function Setting({ title, description, settingNode, category }: SettingProps) {
+function Setting({ title, description, settingNode }: SettingProps) {
   return (
     <div className='grid grid-cols-5'>
       <div className='flex flex-col col-start-1 col-end-5'>
