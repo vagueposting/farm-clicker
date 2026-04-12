@@ -1,22 +1,33 @@
 // @ts-ignore
 import "./settings.css";
 import { useStatModalStore } from "../stores/player-info-modal";
-
-interface SettingProps {
-  title: string;
-  description?: React.ReactNode;
-  setting: React.ReactNode;
-}
+import { generateSettingList } from "../data/settingsList";
 
 interface SettingToggleProps {
   reference: boolean;
-  setting: string;
+  settingParam: string;
   toggleFn: (setting: any) => void;
 }
 
+interface SettingStringProps {
+  reference: string;
+  toggleFn: (setting: string) => void;
+}
+
+export interface SettingConfig {
+  title: string;
+  description?: React.ReactNode;
+  category?: string;
+  setting: SettingToggleProps | SettingStringProps;
+}
+
+type SettingProps = Omit<SettingConfig, "setting"> & {
+  children: React.ReactNode;
+};
+
 export function SettingsMenu() {
-  const { autoOpenOnSell, autoOpenOnStartup, toggleModalSettings } =
-    useStatModalStore();
+  const settingsOrder = ["Appearance"];
+  const settingList = generateSettingList();
 
   return (
     <dialog id='settings' className='modal z-20'>
@@ -28,29 +39,6 @@ export function SettingsMenu() {
           className='flex flex-col gap-3 h-80 overflow-y-auto'
         >
           <h3 className='font-bold text-lg'>Appearance</h3>
-          <Setting
-            title='Open modal on startup'
-            description='The player info modal immediately opens upon startup.'
-            setting={
-              <SettingToggle
-                reference={autoOpenOnStartup}
-                setting='toggleOnStartup'
-                toggleFn={toggleModalSettings}
-              />
-            }
-          />
-
-          <Setting
-            title='Open modal on sell'
-            description='The player info modal automatically opens when you sell an item.'
-            setting={
-              <SettingToggle
-                reference={autoOpenOnSell}
-                setting='toggleOnSell'
-                toggleFn={toggleModalSettings}
-              />
-            }
-          />
         </div>
 
         <div className='modal-action'>
@@ -69,7 +57,7 @@ export function SettingsMenu() {
   );
 }
 
-function Setting({ title, description, setting }: SettingProps) {
+function Setting({ title, description, children, category }: SettingProps) {
   return (
     <div className='grid grid-cols-5'>
       <div className='flex flex-col col-start-1 col-end-5'>
@@ -77,15 +65,19 @@ function Setting({ title, description, setting }: SettingProps) {
         <div className='text-xs'>{description}</div>
       </div>
       <div className='col-start-5 col-end-6 justify-self-center self-center'>
-        {setting}
+        {children}
       </div>
     </div>
   );
 }
 
-function SettingToggle({ reference, setting, toggleFn }: SettingToggleProps) {
+function SettingToggle({
+  reference,
+  settingParam,
+  toggleFn,
+}: SettingToggleProps) {
   function handleOnChange() {
-    toggleFn(setting);
+    toggleFn(settingParam);
   }
 
   return (
@@ -99,5 +91,5 @@ function SettingToggle({ reference, setting, toggleFn }: SettingToggleProps) {
 }
 
 function SearchSetting() {
-  /* tbd */
+  // TODO: create visual component?
 }
