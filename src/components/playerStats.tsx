@@ -47,7 +47,7 @@ export function PlayerStats({ dragConstraints }: PlayerStatProps) {
       </div>
 
       {!modalFolded && (
-        <div className='p-1 text-black bg-white' C>
+        <div className='p-1 text-black bg-white'>
           <p className='flex justify-between align-middle'>
             <span className='font-bold'>Money</span> ${wallet.money}
           </p>
