@@ -11,6 +11,7 @@ export function generateSettingList(): SettingConfig[] {
       description: "The player info modal immediately opens on startup",
       category: "Appearance",
       setting: {
+        type: "toggle",
         reference: autoOpenOnStartup,
         settingParam: "toggleOnStartup",
         toggleFn: toggleModalSettings,
@@ -20,7 +21,9 @@ export function generateSettingList(): SettingConfig[] {
       title: "Open modal on sell",
       description:
         "The player info modal automatically opens when you sell an item.",
+      category: "Appearance",
       setting: {
+        type: "toggle",
         reference: autoOpenOnSell,
         settingParam: "toggleOnSell",
         toggleFn: toggleModalSettings,
